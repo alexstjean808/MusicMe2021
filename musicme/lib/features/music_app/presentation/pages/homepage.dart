@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'dart:developer' as dev;
 
 class MusicMeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -16,10 +18,18 @@ class MusicMeApp extends StatelessWidget {
           child: Column(
             children: [
               WelcomeMessage(),
-              UserMoodTextField(),
-              MusicPlayButton(),
+              SizedBox(
+                height: 30,
+              ),
+              SearchBar(),
+              Builder(builder: (BuildContext context) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * .15,
+                );
+              }),
+              MusicPlayer(),
             ],
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
           ),
         ),
       ),
@@ -41,26 +51,64 @@ class WelcomeMessage extends StatelessWidget {
   }
 }
 
-class UserMoodTextField extends StatefulWidget {
+class SearchBar extends StatefulWidget {
   @override
-  _UserMoodTextFieldState createState() => _UserMoodTextFieldState();
+  _SearchBarState createState() => _SearchBarState();
 }
 
-class _UserMoodTextFieldState extends State<UserMoodTextField> {
+class _SearchBarState extends State<SearchBar> {
+  var _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.75,
+      child: TextField(
+        onSubmitted: (String entry) {
+          _controller.clear();
+        },
+        controller: _controller,
+        decoration: InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
+          border: OutlineInputBorder(),
+          hintText: 'Type here.',
+        ),
+      ),
+    );
   }
 }
 
-class MusicPlayButton extends StatefulWidget {
-  @override
-  _MusicPlayButtonState createState() => _MusicPlayButtonState();
-}
-
-class _MusicPlayButtonState extends State<MusicPlayButton> {
+class MusicPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      decoration: BoxDecoration(color: Color.fromRGBO(99, 75, 110, 50)),
+      height: MediaQuery.of(context).size.height * 0.30,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(40),
+            child: Text(
+              'Three Nights by Domminic F.',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(width: MediaQuery.of(context).size.width * 0.10),
+              IconButton(icon: Icon(Icons.fast_rewind), onPressed: () {}),
+              IconButton(icon: Icon(Icons.pause), onPressed: () {}),
+              IconButton(icon: Icon(Icons.play_arrow), onPressed: () {}),
+              IconButton(icon: Icon(Icons.fast_forward), onPressed: () {}),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.10),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
