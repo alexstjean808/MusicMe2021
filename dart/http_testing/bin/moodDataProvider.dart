@@ -4,9 +4,12 @@ import 'package:http/http.dart' as http;
 import 'sampleEntityIbmData.dart';
 import 'dart:async';
 
-// this is code to talk to ibm's api
-// You input a sentence into the DataProvider and it outputs an IBMData object
-// which is a map of values and can be furthered simplified later.
+/* moodDataProvder.dart
+This is code to talk to IBM's API.
+You input a sentence into the DataProvider and it outputs an IBMData object
+which is a map of values and can be furthered simplified later.
+Returns the main mood from each sentence
+*/
 
 class DataProvider {
   Future<IbmData> readData() async {
