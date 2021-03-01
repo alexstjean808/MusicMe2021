@@ -13,4 +13,5 @@ Future<void> connectToSpotify() async {
   } on MissingPluginException {
     print("not implemented");
   }
+  SpotifySdk.pause();
 }
