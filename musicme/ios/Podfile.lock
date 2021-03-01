@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - spotify_sdk (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - spotify_sdk (from `.symlinks/plugins/spotify_sdk/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  spotify_sdk:
+    :path: ".symlinks/plugins/spotify_sdk/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  spotify_sdk: ac0200a8e5469c409d8c0b151674417eaccfbbbc
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.10.1
