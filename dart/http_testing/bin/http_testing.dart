@@ -1,4 +1,3 @@
-import 'package:http_testing/http_testing.dart' as http_testing;
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
