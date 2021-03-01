@@ -5,22 +5,28 @@ import 'sampleEntityIbmData.dart';
 import 'dart:async';
 
 // this is code to talk to ibm's api
-// TODO: make it so the sentence gets passees into the URL variable.
+// You input a sentence into the DataProvider and it outputs an IBMData object
+// which is a map of values and can be furthered simplified later.
 
 class DataProvider {
   Future<IbmData> readData() async {
-    var map = new Map<String, String>();
-    map['apikey'] = 'cceOakkS6lzRHF4ukgmV0zuQn_eQZrgEPr_mwPnTJMWH';
+    var uname = 'apikey';
+    var pword = 'cceOakkS6lzRHF4ukgmV0zuQn_eQZrgEPr_mwPnTJMWH';
+    var authn = 'Basic ' + base64Encode(utf8.encode('$uname:$pword'));
 
-    var sentence =
-        'I%20know%20that%20times%20are%20tough'; // this is the sentence with spaces converted to %
-    // TODO: make it general so any sentance inputted is converted to that format and can query the IBM thing.
+    var sentence = 'Today I am feeling great.'; // HERE IS THE SENTENCE
 
-    var url =
-        'https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/a8625766-fb0f-46f1-baa3-4cca671d6961/v3/tone?version=2017-09-21&text=Team%2C%20I%20know%20that%20times%20are%20tough%21%20Product%20sales%20have%20been%20disappointing%20for%20the%20past%20three%20quarters.%20We%20have%20a%20competitive%20product%2C%20but%20we%20need%20to%20do%20a%20better%20job%20of%20selling%20it%21?sentences=true';
-    var response = await http.get(url, headers: {
-      'apikey': 'cceOakkS6lzRHF4ukgmV0zuQn_eQZrgEPr_mwPnTJMWH'
-    }); // TODO: figure out how to properly send API key for authentication
+    var params = {
+      'version': '2017-09-21',
+      'text': sentence,
+    };
+    var query = params.entries.map((p) => '${p.key}=${p.value}').join('&');
+    print(query);
+    var response = await http.get(
+      'https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/a8625766-fb0f-46f1-baa3-4cca671d6961/v3/tone?$query?sentences=true',
+      headers: {'Authorization': authn},
+    );
+
     var ibmData;
     if (response.statusCode == 200) {
       var ibmDataInJson = json.decode(response.body);
@@ -35,10 +41,11 @@ class DataProvider {
 }
 
 // trying to use it and print the result from the query
-void main() {
+Future<void> main() async {
   var ibmData = DataProvider();
 
-  var data = ibmData.readData();
+  final data = await ibmData.readData();
 
-  print(data);
+  print(data.document_tone);
+  print(data.document_tone['tones'][0]['tone_id']);
 }
