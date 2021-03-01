@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:musicme/features/music_app/presentation/widgets/search_bar.dart';
 import 'package:musicme/features/music_app/presentation/widgets/welcome_message.dart';
 import 'package:musicme/methods/connect_to_spotify.dart';
-import 'dart:developer';
 
 class MusicMeApp extends StatelessWidget {
   @override
