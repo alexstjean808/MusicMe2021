@@ -1,9 +1,7 @@
 import 'dart:convert' as convert;
-import 'dart:io';
-import 'dart:web_audio';
+
 import 'package:http/http.dart' as http;
-import 'moodDataProvider.dart';
-import 'sampleEntityIbmData.dart';
+
 import 'dart:async';
 import 'dart:math';
 
@@ -23,7 +21,7 @@ class TrackDataProvider {
 
   TrackQueryParams _getQueryParams(var moodIn) {
     var mood = moodIn;
-    var moods = ['joy', 'anger', 'sad'];
+    var moods = ['joy', 'anger', 'sadness'];
     TrackQueryParams params = TrackQueryParams();
 
     if (moods.contains(mood) == false) {
@@ -46,11 +44,14 @@ class TrackDataProvider {
       params.danceability = [0.5, 1];
       params.energy = [0.6, 1]; // default Params to joy
     }
+    return params;
   }
 
   Future<Track> readData(String mood) async {
     // ignore: omit_local_variable_types
     TrackQueryParams params = _getQueryParams(mood);
+    print(params.energy[0]);
+    print(params.energy[1]);
     // Query by energy!
     var energyQueryParams = {
       'orderBy': '"energy"',
@@ -64,8 +65,9 @@ class TrackDataProvider {
 
     var response = await http.get(
         'https://musicme-fd43b-default-rtdb.firebaseio.com/tracks.json?$query');
-    if (response.statusCode != 200)
+    if (response.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${response.statusCode}');
+    }
     print(response.body);
     var returnJSON =
         convert.jsonDecode(response.body); //convert http response to JSON
@@ -80,5 +82,10 @@ class TrackDataProvider {
 
 // returns a random emotion
 
-  Future<void> main() async {}
+}
+
+Future<void> main() async {
+  var trackDataProvider = TrackDataProvider();
+  var trackData = await trackDataProvider.readData('joy');
+  print(trackData.trackId);
 }
