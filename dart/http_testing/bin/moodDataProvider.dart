@@ -17,7 +17,7 @@ class MoodDataProvider {
     var pword = 'cceOakkS6lzRHF4ukgmV0zuQn_eQZrgEPr_mwPnTJMWH';
     var authn = 'Basic ' + base64Encode(utf8.encode('$uname:$pword'));
 
-    var sentence = 'I hate the world I hate you'; // HERE IS THE SENTENCE
+    var sentence = 'My dog died today.'; // HERE IS THE SENTENCE
 
     var params = {
       'version': '2017-09-21',
@@ -35,6 +35,7 @@ class MoodDataProvider {
 
     if (response.statusCode == 200) {
       var ibmDataInJson = json.decode(response.body);
+      print(response.body);
       ibmData = IbmData.fromJson(ibmDataInJson);
       print('Sucessfully got data from IBM');
     } else {
@@ -47,10 +48,16 @@ class MoodDataProvider {
 
 // trying to use it and print the result from the query
 Future<void> main() async {
-  var ibmData = MoodDataProvider();
-  final data = await ibmData.readData();
-  var mood = data.document_tone['tones'][0]['tone_id'];
+  var test = {2, 3, 4, 5, 6};
+  print(test.runtimeType);
+  var moodDataProvider = MoodDataProvider();
+  var ibmData = await moodDataProvider.readData();
 
-  //print out the results
-  print(mood);
+  for (var i = 0; i < ibmData.documentTones.tones.length; i++) {
+    var mood = ibmData.documentTones.tones[i].toneId;
+    var score = ibmData.documentTones.tones[i].score;
+    print('mood number ${i + 1} is $mood');
+    print('score number ${i + 1} is $score');
+    print('-------------------------------');
+  }
 }

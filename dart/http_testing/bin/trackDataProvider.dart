@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:web_audio';
 import 'package:http/http.dart' as http;
 import 'moodDataProvider.dart';
 import 'sampleEntityIbmData.dart';
@@ -17,8 +18,8 @@ class TrackDataProvider extends MoodDataProvider {
     //need to authenticate this from Firebase
     var uname = '';
     var pword = '';
-    //var authn = 'Basic ' + base64Encode(utf8.encode('$uname:$pword'));
-
+    var authn = 'Basic ' + base64Encode(utf8.encode('$uname:$pword'));
+    var sentence = 'I hate the world I hate you';
     var params = {
       'version': '2017-09-21',
       'text': sentence,
@@ -44,38 +45,45 @@ class TrackDataProvider extends MoodDataProvider {
   }
 }
 
+// returns a random emotion
+String getRandomMood() {
+  var moods = ['joy', 'anger', 'sad'];
+  return moods[Random().nextInt(3)];
+}
+
 Future<void> main() async {
   //random number between 0-2
   var random = Random();
+  // ignore: unused_local_variable
   var randomNumber = random.nextInt(3);
-  var songKey, major, danceability, energy;
-  var moods = ["joy", "sadness", "anger"];
-
+  // ignore: unused_local_variable
+  var songKey, major, danceability, energy, acousticness;
+  var mood = 'joy';
 //if we get a mood from IBM, then print the mood
   switch (mood) {
-    case mood == moods[0]:
+    case 'joy':
       {
-        songKey = {C,D, A, BB};
+        songKey = {'C', 'D', 'A', 'BB'};
         major = 1;
         danceability = [0.5, 1];
         energy = [0.6, 1];
       }
       break;
 
-    case mood == moods[1]:
+    case 'sad':
       {
-        songKey = {C,C#, DB, D, D#, F, F#, BB, B};
+        songKey = {'C', 'C#', 'DB', 'D', 'D#', 'F', 'F#', 'BB', 'B'};
         major = 0;
         danceability = [0, 0.4];
-        energy = [0,0.6];
+        energy = [0, 0.6];
       }
       break;
 
-    case mood == moods[2]:
+    case 'anger':
       {
-        songKey = {C#,D, D#,EB, E, F, F#,G, AB, B};
-        major = {0,1};
-        acousticness= [0, 0.6];
+        songKey = {'C#', 'D', 'D#', 'EB', 'E', 'F', 'F#', 'G', 'AB', 'B'};
+        major = {0, 1};
+        acousticness = [0, 0.6];
         energy = [0.6, 1];
       }
       break;
@@ -83,7 +91,7 @@ Future<void> main() async {
     //else, give it a random mood
     default:
       {
-        //put the random thing
+        getRandomMood(); // define above, just gets a random emotion.
       }
       break;
   }
