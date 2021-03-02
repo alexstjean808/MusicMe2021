@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'moodDataProvider.dart';
 import 'sampleEntityIbmData.dart';
 import 'dart:async';
+import 'dart:math';
 
 /* trackDataProvider.dart
 Request track from Firebase
@@ -10,7 +12,7 @@ Input void
 Output track_ID
 */
 
-class DataProvider {
+class TrackDataProvider extends MoodDataProvider {
   Future<IbmData> readData() async {
     //need to authenticate this from Firebase
     var uname = '';
@@ -39,5 +41,50 @@ class DataProvider {
       assert(response.statusCode == 200);
     }
     return ibmData;
+  }
+}
+
+Future<void> main() async {
+  //random number between 0-2
+  var random = Random();
+  var randomNumber = random.nextInt(3);
+  var songKey, major, danceability, energy;
+  var moods = ["joy", "sadness", "anger"];
+
+//if we get a mood from IBM, then print the mood
+  switch (mood) {
+    case mood == moods[0]:
+      {
+        songKey = {C,D, A, BB};
+        major = 1;
+        danceability = [0.5, 1];
+        energy = [0.6, 1];
+      }
+      break;
+
+    case mood == moods[1]:
+      {
+        songKey = {C,C#, DB, D, D#, F, F#, BB, B};
+        major = 0;
+        danceability = [0, 0.4];
+        energy = [0,0.6];
+      }
+      break;
+
+    case mood == moods[2]:
+      {
+        songKey = {C#,D, D#,EB, E, F, F#,G, AB, B};
+        major = {0,1};
+        acousticness= [0, 0.6];
+        energy = [0.6, 1];
+      }
+      break;
+
+    //else, give it a random mood
+    default:
+      {
+        //put the random thing
+      }
+      break;
   }
 }
