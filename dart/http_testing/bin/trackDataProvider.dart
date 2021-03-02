@@ -4,20 +4,18 @@ import 'package:http/http.dart' as http;
 import 'sampleEntityIbmData.dart';
 import 'dart:async';
 
-/* moodDataProvider.dart
-This is code to talk to IBM's API.
-You input a sentence into the DataProvider and it outputs an IBMData object
-which is a map of values and can be furthered simplified later.
-Returns the main mood from each sentence
+/* trackDataProvider.dart
+Request track from Firebase
+Input void
+Output track_ID
 */
 
 class DataProvider {
   Future<IbmData> readData() async {
-    var uname = 'apikey';
-    var pword = 'cceOakkS6lzRHF4ukgmV0zuQn_eQZrgEPr_mwPnTJMWH';
-    var authn = 'Basic ' + base64Encode(utf8.encode('$uname:$pword'));
-
-    var sentence = 'Today I am feeling great.'; // HERE IS THE SENTENCE
+    //need to authenticate this from Firebase
+    var uname = '';
+    var pword = '';
+    //var authn = 'Basic ' + base64Encode(utf8.encode('$uname:$pword'));
 
     var params = {
       'version': '2017-09-21',
@@ -42,14 +40,4 @@ class DataProvider {
     }
     return ibmData;
   }
-}
-
-// trying to use it and print the result from the query
-Future<void> main() async {
-  var ibmData = DataProvider();
-
-  final data = await ibmData.readData();
-
-  print(data.document_tone);
-  print(data.document_tone['tones'][0]['tone_id']);
 }
