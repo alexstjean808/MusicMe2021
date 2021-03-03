@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'sampleEntityIbmData.dart';
 import 'dart:async';
+
+import 'package:musicme/features/music_app/data/entities/ibm_data.dart';
 
 /* moodDataProvider.dart
 This is code to talk to IBM's API.
@@ -41,21 +41,5 @@ class MoodDataProvider {
       assert(response.statusCode == 200);
     }
     return ibmData;
-  }
-}
-
-// trying to use it and print the result from the query
-Future<void> main() async {
-  var test = {2, 3, 4, 5, 6};
-  print(test.runtimeType);
-  var moodDataProvider = MoodDataProvider();
-  var ibmData = await moodDataProvider.readData("I am happy today.");
-
-  for (var i = 0; i < ibmData.documentTones.tones.length; i++) {
-    var mood = ibmData.documentTones.tones[i].toneId;
-    var score = ibmData.documentTones.tones[i].score;
-    print('mood number ${i + 1} is $mood');
-    print('score number ${i + 1} is $score');
-    print('-------------------------------');
   }
 }

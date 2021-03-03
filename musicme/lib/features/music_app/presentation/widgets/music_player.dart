@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:musicme/features/music_app/data/entities/track.dart';
+import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
 class MusicPlayer extends StatelessWidget {
-  String _trackName = "I'll Never Smile Again";
-  String _artist = "Tommy Dorsey";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,9 +26,13 @@ class MusicPlayer extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 40),
-            child: Text(
-              '$_trackName by $_artist.', // TODO: We need to change this so it displays the author and sing title, this will be the output of the BLoC.
-              style: TextStyle(fontSize: 20, color: Colors.white),
+            child: BlocBuilder<TrackBloc, Track>(
+              builder: (context, track) {
+                return Text(
+                  'id is ${track.trackId}.',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                );
+              },
             ),
           ),
           Row(

@@ -1,13 +1,9 @@
 import 'dart:convert' as convert;
-
 import 'package:http/http.dart' as http;
-import 'package:test/test.dart';
-
+import 'package:musicme/features/music_app/data/entities/track.dart';
 import 'dart:async';
 import 'dart:math';
-
-import 'moodDataProvider.dart';
-import 'track.dart';
+import 'mood_data_provider.dart';
 
 /* trackDataProvider.dart
 Request track from Firebase
@@ -34,7 +30,7 @@ class TrackDataProvider {
     for (var i = startIndex; i < songKeyList.length; i++) {
       var currentSongKey = songKeyList[
           i]; //currentSongKey is the highest identifier of a song from the database
-      var currentSong = returnJSON['${currentSongKey}'];
+      var currentSong = returnJSON['$currentSongKey'];
       //JSON object of one song in the loop
       var currentSpotifyID = currentSong['id']; //spotify ID
       var currentAttribute =
@@ -143,10 +139,4 @@ class TrackDataProvider {
 
 // returns a random emotion
 
-}
-
-Future<void> main() async {
-  var trackDataProvider = TrackDataProvider();
-  var trackData = await trackDataProvider.readData('I hate this stuff.');
-  print(trackData.trackId);
 }
