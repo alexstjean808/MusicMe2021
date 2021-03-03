@@ -120,6 +120,13 @@ class TrackDataProvider {
           songKeyList: songKeyList,
           returnJSON: returnJSON);
     } else {
+      //default params are for joy
+      returnJSON = filterTrackAttributes(
+          lowRange: params.danceability[0],
+          highRange: params.danceability[1],
+          trackAttb: 'danceability',
+          songKeyList: songKeyList,
+          returnJSON: returnJSON);
       print('mood not detected');
     }
 
