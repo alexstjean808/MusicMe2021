@@ -133,7 +133,7 @@ class TrackDataProvider {
     var trackID = returnJSON[randNum];
 
     var track = Track(trackId: trackID);
-
+    print("The track id in the data layer is: ${track.trackId}");
     return track;
   }
 

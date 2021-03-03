@@ -7,7 +7,6 @@ import 'package:musicme/features/music_app/presentation/bloc/track_event.dart';
 import 'package:musicme/features/music_app/presentation/widgets/music_player.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
-// TODO: implement the search features BLoC here,
 // we need to send the input enetry below to the BloC
 class SearchBar extends StatefulWidget {
   @override
@@ -19,20 +18,28 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: close_sinks
     final _trackBloc = BlocProvider.of<TrackBloc>(context);
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.75,
       child: BlocListener<TrackBloc, Track>(
         listener: (context, track) {
-          SpotifySdk.play(spotifyUri: "spotify:track:${track.trackId}");
+          print(
+              "trying to play the track: Bloc listener is responding to input");
+          print(track.trackId);
+
+          String trackId =
+              track.trackId; //7GhIk7Il098yCjg4BQjzvb 6q9IP7wbfpocUiOEGvQqCZ
+          SpotifySdk.play(spotifyUri: "spotify:track:$trackId", asRadio: true);
+          print('trying to play spotify song spotify:track:$trackId');
         },
         child: TextField(
           onSubmitted: (String entry) {
             _trackBloc.add(GetTrackEvent(entry));
             Scaffold.of(context).showBottomSheet((context) => MusicPlayer());
             _controller.clear();
-            sleep(Duration(seconds: 2)); // delay so the keyboard can disapear.
+            // delay so the keyboard can disapear.
           },
           controller: _controller,
           decoration: InputDecoration(

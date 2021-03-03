@@ -26,14 +26,7 @@ class MusicPlayer extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 40),
-            child: BlocBuilder<TrackBloc, Track>(
-              builder: (context, track) {
-                return Text(
-                  'id is ${track.trackId}.',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                );
-              },
-            ),
+            child: Text("Nothing For NOw"),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -107,6 +100,24 @@ class MusicPlayer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class BlockBuilderForLater extends StatelessWidget {
+  const BlockBuilderForLater({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TrackBloc, Track>(
+      builder: (context, track) {
+        return Text(
+          'id is ${track.trackId}.',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        );
+      },
     );
   }
 }
