@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'sampleEntityIbmData.dart';
 import 'dart:async';
@@ -49,7 +48,7 @@ Future<void> main() async {
   var test = {2, 3, 4, 5, 6};
   print(test.runtimeType);
   var moodDataProvider = MoodDataProvider();
-  var ibmData = await moodDataProvider.readData("I am happy today.");
+  var ibmData = await moodDataProvider.readData('I am happy today.');
 
   for (var i = 0; i < ibmData.documentTones.tones.length; i++) {
     var mood = ibmData.documentTones.tones[i].toneId;

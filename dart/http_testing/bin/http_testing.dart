@@ -52,6 +52,7 @@ void main(List<String> arguments) async {
   List filterTrackAttributes(
       double lowRange, double highRange, String trackAttb) {
     //allows you to filter tracks based on a JSON key in the song... must be one of the attributes that is in doubles
+    // ignore: omit_local_variable_types
     List suitableTracks = [];
     var startIndex = 0;
     for (var i = startIndex; i < songKeyList.length; i++) {
@@ -79,6 +80,7 @@ void main(List<String> arguments) async {
   //   return songID;
   // }
 
+  // ignore: omit_local_variable_types
   List playOneOfThese = filterTrackAttributes(.1, .9, 'danceability');
   print('List of songs that are suited: $playOneOfThese');
 }

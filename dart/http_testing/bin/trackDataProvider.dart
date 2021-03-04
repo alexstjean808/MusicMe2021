@@ -1,7 +1,6 @@
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
-import 'package:test/test.dart';
 
 import 'dart:async';
 import 'dart:math';
@@ -52,6 +51,7 @@ class TrackDataProvider {
   TrackQueryParams _getQueryParams(var moodIn) {
     var mood = moodIn;
     var moods = ['joy', 'anger', 'sadness'];
+    // ignore: omit_local_variable_types
     TrackQueryParams params = TrackQueryParams();
 
     if (moods.contains(mood) == false) {
