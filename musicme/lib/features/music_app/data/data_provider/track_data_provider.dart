@@ -1,6 +1,6 @@
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:musicme/features/music_app/data/entities/track.dart';
+import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'dart:async';
 import 'dart:math';
 import 'mood_data_provider.dart';
@@ -74,7 +74,7 @@ class TrackDataProvider {
     return params;
   }
 
-  Future<Track> readData(String sentence) async {
+  Future<TrackData> readData(String sentence) async {
     // ignore: omit_local_variable_types
     var moodDataProvider = MoodDataProvider();
     var ibmData = await moodDataProvider.readData(sentence);
@@ -139,7 +139,7 @@ class TrackDataProvider {
 
     var trackID = returnJSON[randNum];
 
-    var track = Track(trackId: trackID);
+    var track = TrackData(trackId: trackID);
     print("The track id in the data layer is: ${track.trackId}");
     return track;
   }

@@ -1,7 +1,10 @@
-class Track {
+class TrackData {
   final trackId;
+  String name;
+  String artist;
+  // not final because this is initialized later when player is active and changes
 
-  Track({this.trackId});
+  TrackData({this.trackId});
 }
 
 class TrackQueryParams {

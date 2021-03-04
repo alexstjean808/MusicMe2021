@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:musicme/features/music_app/data/entities/track.dart';
+import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
@@ -26,7 +26,11 @@ class MusicPlayer extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 40),
-            child: Text("Nothing For NOw"),
+            child: BlocBuilder<TrackBloc, TrackData>(
+              builder: (context, trackData) {
+                return Text("${trackData.name} by ${trackData.artist}");
+              },
+            ),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -111,7 +115,7 @@ class BlockBuilderForLater extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TrackBloc, Track>(
+    return BlocBuilder<TrackBloc, TrackData>(
       builder: (context, track) {
         return Text(
           'id is ${track.trackId}.',
