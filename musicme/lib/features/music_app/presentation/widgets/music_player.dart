@@ -1,7 +1,11 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
+import 'package:musicme/features/music_app/presentation/bloc/track_event.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
 class MusicPlayer extends StatelessWidget {
@@ -28,6 +32,9 @@ class MusicPlayer extends StatelessWidget {
             padding: EdgeInsets.only(bottom: 40),
             child: BlocBuilder<TrackBloc, TrackData>(
               builder: (context, trackData) {
+                if (trackData.name == null || trackData.artist == null) {
+                  return Text("Song Name Loading...");
+                }
                 return Text("${trackData.name} by ${trackData.artist}");
               },
             ),
@@ -47,7 +54,10 @@ class MusicPlayer extends StatelessWidget {
                   child: Icon(Icons.fast_rewind, color: Colors.white),
                 ),
                 onPressed: () {
+                  debugger();
                   SpotifySdk.skipPrevious();
+                  sleep(Duration(milliseconds: 500));
+                  BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
                 }, // PREVIOUS SONG BACK BUTTON
               ),
               ElevatedButton(
@@ -95,6 +105,8 @@ class MusicPlayer extends StatelessWidget {
                 ),
                 onPressed: () {
                   SpotifySdk.skipNext();
+                  sleep(Duration(milliseconds: 500));
+                  BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
                 }, // FAST FORWARD BUTTON
               ),
               SizedBox(
