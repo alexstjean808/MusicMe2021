@@ -5,6 +5,10 @@ class TrackRepository {
   final TrackDataProvider trackDataProvider;
 
   TrackRepository(this.trackDataProvider);
+  Future<TrackData> getFeelingLuckyTrack() async {
+    final TrackData track = await trackDataProvider.getFeelingLuckyTrack();
+    return track;
+  }
 
   Future<TrackData> getAllDataThatMeetsRequirements(String sentence) async {
     final TrackData track = await trackDataProvider.readData(sentence);

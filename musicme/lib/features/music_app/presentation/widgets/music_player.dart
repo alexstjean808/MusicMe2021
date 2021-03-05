@@ -39,101 +39,120 @@ class MusicPlayer extends StatelessWidget {
               },
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(width: MediaQuery.of(context).size.width * 0.08),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  primary: Colors.black,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(11.0),
-                  child: Icon(Icons.fast_rewind, color: Colors.white),
-                ),
-                onPressed: () {
-                  debugger();
-                  SpotifySdk.skipPrevious();
-                  sleep(Duration(milliseconds: 500));
-                  BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
-                }, // PREVIOUS SONG BACK BUTTON
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  primary: Colors.black,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(11.0),
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-                onPressed: () {
-                  SpotifySdk.resume();
-                }, // RESUME BUTTON
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  primary: Colors.black,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(11.0),
-                  child: Icon(
-                    Icons.pause,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-                onPressed: () {
-                  SpotifySdk.pause();
-                }, // PAUSE BUTTON
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  primary: Colors.black,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(11.0),
-                  child: Icon(Icons.fast_forward, color: Colors.white),
-                ),
-                onPressed: () {
-                  SpotifySdk.skipNext();
-                  sleep(Duration(milliseconds: 500));
-                  BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
-                }, // FAST FORWARD BUTTON
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.08,
-              ),
-            ],
+          ControlButtons(),
+          SizedBox(
+            height: 20,
           ),
+          FeelingLuckyButton(),
         ],
       ),
     );
   }
 }
 
-class BlockBuilderForLater extends StatelessWidget {
-  const BlockBuilderForLater({
+class FeelingLuckyButton extends StatelessWidget {
+  const FeelingLuckyButton({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TrackBloc, TrackData>(
-      builder: (context, track) {
-        return Text(
-          'id is ${track.trackId}.',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        );
-      },
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        primary: Colors.black,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(11.0),
+        child: Icon(Icons.cake, color: Colors.white),
+      ),
+      onPressed: () {
+        BlocProvider.of<TrackBloc>(context).add(FeelingLuckyEvent());
+      }, // PREVIOUS SONG BACK BUTTON
+    );
+  }
+}
+
+class ControlButtons extends StatelessWidget {
+  const ControlButtons({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        SizedBox(width: MediaQuery.of(context).size.width * 0.08),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            primary: Colors.black,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: Icon(Icons.fast_rewind, color: Colors.white),
+          ),
+          onPressed: () {
+            SpotifySdk.skipPrevious();
+            sleep(Duration(milliseconds: 500));
+            BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
+          }, // PREVIOUS SONG BACK BUTTON
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            primary: Colors.black,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: Icon(
+              Icons.play_arrow,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+          onPressed: () {
+            SpotifySdk.resume();
+          }, // RESUME BUTTON
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            primary: Colors.black,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: Icon(
+              Icons.pause,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+          onPressed: () {
+            SpotifySdk.pause();
+          }, // PAUSE BUTTON
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            primary: Colors.black,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: Icon(Icons.fast_forward, color: Colors.white),
+          ),
+          onPressed: () {
+            SpotifySdk.skipNext();
+            sleep(Duration(milliseconds: 500));
+            BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
+          }, // FAST FORWARD BUTTON
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.08,
+        ),
+      ],
     );
   }
 }

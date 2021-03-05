@@ -60,6 +60,13 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
       TrackData trackData = TrackData(trackId: 'This Should Not play');
       trackData = await _updateTrackData(trackData);
       yield trackData;
+    } else if (event is FeelingLuckyEvent) {
+      TrackData trackData = await repository.getFeelingLuckyTrack();
+      _playSpotifyTrack(trackData);
+      sleep(Duration(seconds: 1)); // giving time for call to spotify
+      trackData = await _updateTrackData(trackData);
+      // updating the trackData for name and artist
+      yield trackData;
     }
   }
 }
