@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
+import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:musicme/features/music_app/data/entities/track.dart';
+import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'dart:async';
 import 'dart:math';
 import 'mood_data_provider.dart';
@@ -13,7 +14,8 @@ Output track_ID
 
 class TrackDataProvider {
   String _getRandomMood() {
-    var moods = ['joy', 'anger', 'sad'];
+    print("Mood was confident of analytical: Generatingg a random mood.");
+    var moods = ['joy', 'anger', 'sadness'];
     return moods[Random().nextInt(3)];
   }
 
@@ -46,23 +48,24 @@ class TrackDataProvider {
   }
 
   TrackQueryParams _getQueryParams(var moodIn) {
-    var mood = moodIn;
     var moods = ['joy', 'anger', 'sadness'];
     TrackQueryParams params = TrackQueryParams();
+    params.mood = moodIn;
 
-    if (moods.contains(mood) == false) {
-      mood =
+    if (moods.contains(moodIn) == false) {
+      params.mood =
           _getRandomMood(); // if the mood doesnt exist then this function will return a random mood to work with.
     }
-    if (mood == 'joy') {
+    print("the mood in the params object is: ${params.mood}");
+    if (params.mood == 'joy') {
       params.major = 1;
       params.danceability = [0.5, 1];
       params.energy = [0.8, 1];
-    } else if (mood == 'sadness') {
+    } else if (params.mood == 'sadness') {
       params.major = 0;
       params.danceability = [0, 0.4];
       params.energy = [0, 0.6];
-    } else if (mood == 'anger') {
+    } else if (params.mood == 'anger') {
       params.acousticness = [0, 0.6];
       params.energy = [0.5, .9];
     } else {
@@ -70,11 +73,11 @@ class TrackDataProvider {
       params.danceability = [0.5, 1];
       params.energy = [0.6, 1]; // default Params to joy
     }
-    params.mood = mood;
+
     return params;
   }
 
-  Future<Track> readData(String sentence) async {
+  Future<TrackData> readData(String sentence) async {
     // ignore: omit_local_variable_types
     var moodDataProvider = MoodDataProvider();
     var ibmData = await moodDataProvider.readData(sentence);
@@ -88,7 +91,7 @@ class TrackDataProvider {
       'orderBy': '"energy"',
       'startAt': '${params.energy[0]}',
       'endAt': '${params.energy[1]}',
-      'limitToLast': '20',
+      'limitToLast': '100',
       'print': 'pretty',
     };
     var query =
@@ -105,14 +108,14 @@ class TrackDataProvider {
 
     var songKeyList = returnJSON.keys.toList();
 
-    if (mood == 'joy' || mood == 'sadness') {
+    if (params.mood == 'joy' || params.mood == 'sadness') {
       returnJSON = filterTrackAttributes(
           lowRange: params.danceability[0],
           highRange: params.danceability[1],
           trackAttb: 'danceability',
           songKeyList: songKeyList,
           returnJSON: returnJSON);
-    } else if (mood == 'anger') {
+    } else if (params.mood == 'anger') {
       returnJSON = filterTrackAttributes(
           lowRange: params.acousticness[0],
           highRange: params.acousticness[1],
@@ -139,7 +142,7 @@ class TrackDataProvider {
 
     var trackID = returnJSON[randNum];
 
-    var track = Track(trackId: trackID);
+    var track = TrackData(trackId: trackID);
     print("The track id in the data layer is: ${track.trackId}");
     return track;
   }

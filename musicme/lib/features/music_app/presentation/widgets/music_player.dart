@@ -1,7 +1,11 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:musicme/features/music_app/data/entities/track.dart';
+import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
+import 'package:musicme/features/music_app/presentation/bloc/track_event.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
 class MusicPlayer extends StatelessWidget {
@@ -26,7 +30,14 @@ class MusicPlayer extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 40),
-            child: Text("Nothing For NOw"),
+            child: BlocBuilder<TrackBloc, TrackData>(
+              builder: (context, trackData) {
+                if (trackData.name == null || trackData.artist == null) {
+                  return Text("Song Name Loading...");
+                }
+                return Text("${trackData.name} by ${trackData.artist}");
+              },
+            ),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -43,7 +54,10 @@ class MusicPlayer extends StatelessWidget {
                   child: Icon(Icons.fast_rewind, color: Colors.white),
                 ),
                 onPressed: () {
+                  debugger();
                   SpotifySdk.skipPrevious();
+                  sleep(Duration(milliseconds: 500));
+                  BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
                 }, // PREVIOUS SONG BACK BUTTON
               ),
               ElevatedButton(
@@ -91,6 +105,8 @@ class MusicPlayer extends StatelessWidget {
                 ),
                 onPressed: () {
                   SpotifySdk.skipNext();
+                  sleep(Duration(milliseconds: 500));
+                  BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
                 }, // FAST FORWARD BUTTON
               ),
               SizedBox(
@@ -111,7 +127,7 @@ class BlockBuilderForLater extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TrackBloc, Track>(
+    return BlocBuilder<TrackBloc, TrackData>(
       builder: (context, track) {
         return Text(
           'id is ${track.trackId}.',

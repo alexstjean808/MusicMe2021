@@ -18,7 +18,8 @@ void main() async {
   var res = await http.get(
       'https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/a8625766-fb0f-46f1-baa3-4cca671d6961/v3/tone?$query',
       headers: {'Authorization': authn});
-  if (res.statusCode != 200)
+  if (res.statusCode != 200) {
     throw Exception('http.get error: statusCode= ${res.statusCode}');
+  }
   print(res.body);
 }
