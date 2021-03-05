@@ -23,6 +23,7 @@ class _SearchBarState extends State<SearchBar> {
       child: TextField(
         onSubmitted: (String entry) {
           _trackBloc.add(GetTrackEvent(sentence: entry));
+
           Scaffold.of(context).showBottomSheet((context) => MusicPlayer());
           _controller.clear();
           // delay so the keyboard can disapear.
