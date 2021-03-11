@@ -21,3 +21,13 @@ class FeelingLuckyEvent extends TrackEvent {
   @override
   List<Object> get props => [];
 }
+
+class LikeEvent extends TrackEvent {
+  @override
+  List<Object> get props => [];
+}
+
+class DislikeEvent extends TrackEvent {
+  @override
+  List<Object> get props => [];
+}

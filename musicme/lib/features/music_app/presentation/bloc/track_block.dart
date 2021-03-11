@@ -67,6 +67,14 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
       trackData = await _updateTrackData(trackData);
       // updating the trackData for name and artist
       yield trackData;
+    } else if (event is LikeEvent) {
+      //add song + artist to the user library
+      //add liked song to liked songs list in
+      //liked song stores in JSON
+    } else if (event is DislikeEvent) {
+      //Read track parameters from JSON
+      //function that changese the parameters for whatever mood range was disliked
+      //update the track params json
     }
   }
 }
