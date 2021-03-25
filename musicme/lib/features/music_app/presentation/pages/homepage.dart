@@ -5,6 +5,7 @@ import 'package:musicme/features/music_app/data/data_provider/track_data_provide
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
+import 'package:musicme/features/music_app/presentation/pages/genre_page.dart';
 import 'package:musicme/features/music_app/presentation/widgets/search_bar.dart';
 import 'package:musicme/features/music_app/presentation/widgets/welcome_message.dart';
 
@@ -18,6 +19,18 @@ class MusicMeHomePage extends StatelessWidget {
             TrackData(trackId: '7GhIk7Il098yCjg4BQjzvb'),
             TrackRepository(TrackDataProvider())),
         child: Scaffold(
+          appBar: AppBar(
+            leadingWidth: 150,
+            leading: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => GenrePage()));
+                },
+                child: Text("Search by Genre"),
+              ),
+            ),
+          ),
           resizeToAvoidBottomInset: false,
           body: Container(
             decoration: BoxDecoration(
