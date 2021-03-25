@@ -71,6 +71,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
       //add song + artist to the user library
       //add liked song to liked songs list in
       //liked song stores in JSON
+      // {id: '1234124', name:'dfgsdf', artist: 'Taylor Swift'}
     } else if (event is DislikeEvent) {
       //Read track parameters from JSON
       //function that changese the parameters for whatever mood range was disliked

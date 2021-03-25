@@ -30,7 +30,7 @@ class MusicPlayer extends StatelessWidget {
           ),
           LikeDislikeButtons(),
           Padding(
-            padding: EdgeInsets.only(bottom: 40),
+            padding: EdgeInsets.only(bottom: 10),
             child: BlocBuilder<TrackBloc, TrackData>(
               builder: (context, trackData) {
                 if (trackData.name == null || trackData.artist == null) {
