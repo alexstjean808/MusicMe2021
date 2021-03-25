@@ -1,0 +1,19 @@
+{
+  "joy_params": {
+    "major": 1,
+    "danceability": [0.5, 1],
+    "energy": [0.6, 1],
+    "acousticness": []
+  },
+  "anger_params": {
+    "major": 1,
+    "danceability": [],
+    "energy": [0.6, 1],
+    "acousticness": [0, 0.6]
+  },
+  "sadness_params": {
+    "major": 1,
+    "danceability": [0, 0.4],
+    "energy": [0, 0.6]
+  }
+}

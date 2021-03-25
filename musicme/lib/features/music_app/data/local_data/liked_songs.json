@@ -1,7 +1,14 @@
 {
-  "likedSongs": {
-    "id": "6q9IP7wbfpocUiOEGvQqCZ",
-    "name": "I'll Never Smile Again",
-    "artist": "Tommy Dorsey"
-  }
+  "liked_songs": [
+    {
+      "trackId": "id1",
+      "name": "thisSong1",
+      "artist": "Yeezy"
+    },
+    {
+      "trackId": "id2",
+      "name": "thisSong2",
+      "artist": "TSwiftDaddy"
+    }
+  ]
 }
