@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 //NOT WORKING YET
+// Hey Faith cool code. What does this do? I couldnt figure it out. Usually you wouldnt use any Statless widgets in
+// the backend. also I thought we were not taking username and a password?
 
 UsersPodo _usersPodo; // Users object to store users from json
 
@@ -70,7 +72,7 @@ class UsersPodo {
 
   UsersPodo.fromJson(Map<String, dynamic> json) {
     if (json['users'] != null) {
-      users = new List<Users>();
+      List<Users> users = [];
       json['users'].forEach((v) {
         users.add(new Users.fromJson(v));
       });

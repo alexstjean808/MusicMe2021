@@ -11,7 +11,7 @@ Takes onPressedKey property from front end
 Output track_ID
 */
 
-class updateUserPreferences
-{
-  OnPressed: (){var count = 1; count++;}
-}
+// class updateUserPreferences
+// {
+//   OnPressed: (){var count = 1; count++;}
+// }
