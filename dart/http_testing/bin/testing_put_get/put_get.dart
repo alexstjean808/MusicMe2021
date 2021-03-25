@@ -10,13 +10,16 @@ void main() async {
   var input = await File(filePath).readAsString();
   var jsonFile = JsonDecoder().convert(input);
   // this outputs the json as a hashmap
-  print(jsonFile);
+  // changing the key we want
+  // EVERYTHING IN HERE WILL work on the json;
+  var newSentance = 'this was added';
+  jsonFile['input_log'].add(newSentance);
   // WOW HOLY THIS WORKS! I CANT BELIEVE IT THIS IS SWEET.
-  /*var dataToWrite = {'data': 'Wow I can write data to a file'};
+  var dataToWrite = jsonFile;
   var jsonFileOutPut = JsonEncoder().convert(dataToWrite);
 
   var output = await File(filePath).writeAsString(jsonFileOutPut);
 
-  print(output);*/
+  print(output);
   // now lets try to write to the file!
 }
