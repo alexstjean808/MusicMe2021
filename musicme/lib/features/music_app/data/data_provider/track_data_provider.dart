@@ -1,7 +1,7 @@
 import 'dart:convert' as convert;
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
+import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
 import 'dart:async';
 import 'dart:math';
 import 'mood_data_provider.dart';
@@ -47,7 +47,7 @@ class TrackDataProvider {
     return suitableTracks;
   }
 
-  TrackQueryParams _getQueryParams(var moodIn) {
+  Params _getQueryParams(var moodIn) {
     var moods = ['joy', 'anger', 'sadness'];
     TrackQueryParams params = TrackQueryParams();
     params.mood = moodIn;
@@ -58,23 +58,14 @@ class TrackDataProvider {
     }
     print("the mood in the params object is: ${params.mood}");
     if (params.mood == 'joy') {
-      params.major = 1;
-      params.danceability = [0.5, 1];
-      params.energy = [0.8, 1];
+      return params.trackMoodRanges.joyParams;
     } else if (params.mood == 'sadness') {
-      params.major = 0;
-      params.danceability = [0, 0.4];
-      params.energy = [0, 0.6];
+      return params.trackMoodRanges.sadnessParams;
     } else if (params.mood == 'anger') {
-      params.acousticness = [0, 0.6];
-      params.energy = [0.5, .9];
-    } else {
-      params.major = 1;
-      params.danceability = [0.5, 1];
-      params.energy = [0.6, 1]; // default Params to joy
+      return params.trackMoodRanges.angerParams;
     }
 
-    return params;
+    return params.trackMoodRanges.joyParams;
   }
 
   Future<TrackData> getFeelingLuckyTrack() async {
@@ -105,16 +96,23 @@ class TrackDataProvider {
     return trackData;
   }
 
-  Future<TrackData> readData(String sentence) async {
+  Future<TrackData> getTrack(String sentence) async {
     // ignore: omit_local_variable_types
+    // this gets the mood from the IBM tone analyser
     var moodDataProvider = MoodDataProvider();
+    // ibmData now has a mood string in it.
     var ibmData = await moodDataProvider.readData(sentence);
+    // here we are getting the document tone mood
     var mood = ibmData.documentTones.tones[0].toneId;
+    // logging mood to console.
     print(mood);
     // ignore: omit_local_variable_types
-    TrackQueryParams params = _getQueryParams(mood);
+    //TODO: change this to read local params in track_query_params.json
+    // this will be talkging to the query Params data provider
+    Params params = _getQueryParams(mood);
 
     // Query by energy!
+    // we always sort by energy first cause every single mood will have an energy param.
     var energyQueryParams = {
       'orderBy': '"energy"',
       'startAt': '${params.energy[0]}',
