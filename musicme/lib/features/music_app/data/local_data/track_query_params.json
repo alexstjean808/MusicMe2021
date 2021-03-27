@@ -15,5 +15,6 @@
     "major": 1,
     "danceability": [0, 0.4],
     "energy": [0, 0.6]
-  }
+  },
+  "genres": ["rock"]
 }

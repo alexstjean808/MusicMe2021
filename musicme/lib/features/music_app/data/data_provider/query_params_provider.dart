@@ -26,4 +26,9 @@ class QueryParamsProvider {
   Future<TrackMoodRanges> readParamRanges() async {
     //TODO impliment method!
   }
+
+  testMethod() {
+    print("Is this running in the test method");
+    return 1;
+  }
 }
