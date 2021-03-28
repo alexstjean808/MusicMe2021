@@ -11,8 +11,8 @@ class TrackQueryParams {
   TrackQueryParams(this.trackMoodRanges, this.genres, this.countries);
   TrackQueryParams.fromJson(Map<String, dynamic> json)
       : trackMoodRanges = TrackMoodRanges.fromJson(json['track_mood_ranges']),
-        genres = json["genres"],
-        countries = json["countries"];
+        genres = json["genres"] ?? [],
+        countries = json["countries"] ?? [];
 }
 
 class TrackMoodRanges {

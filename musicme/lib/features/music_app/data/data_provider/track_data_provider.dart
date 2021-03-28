@@ -123,7 +123,7 @@ class TrackDataProvider {
           _getRandomMood(); // if the mood doesnt exist then this function will return a random mood to work with.
     }
     // Reading the data from track_query_params
-    var trackQueryParams = await QueryParamsProvider().readParams();
+    var trackQueryParams = await QueryParamsProvider().readParams('musicme');
     // now we will get all the ranges for whatever mood we got from IBM
     Ranges ranges = _selectParamRangeFromMood(trackQueryParams, mood);
 

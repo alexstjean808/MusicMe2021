@@ -17,7 +17,7 @@ class GenreBloc extends Bloc<GenreEvent, List> {
         print("we could not write to the file");
       }
       try {
-        params = await genreProvider.readParams();
+        params = await genreProvider.readParams('musicme');
       } catch (e) {
         print("we could not read to the file");
       }
@@ -25,7 +25,7 @@ class GenreBloc extends Bloc<GenreEvent, List> {
       yield params.genres;
     } else if (event is RemoveGenreEvent) {
       await genreProvider.removeUserGenres(event.genreInput);
-      var params = await genreProvider.readParams();
+      var params = await genreProvider.readParams('musicme');
       yield params.genres;
     }
   }
