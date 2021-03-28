@@ -19,5 +19,6 @@
       "acousticness": [0.0]
     }
   },
-  "genres": []
+  "genres": ["Rock"],
+  "countries":["Uganda"]
 }

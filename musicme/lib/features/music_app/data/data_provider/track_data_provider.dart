@@ -76,7 +76,7 @@ class TrackDataProvider {
   }
 
   Future<TrackData> getFeelingLuckyTrack() async {
-    var range = 15000;
+    var range = 800000;
     var randomNumber = Random().nextInt(range);
 
     //parameters are key for the firebase and a random number between 0 and the length of the database that we hardcoded
@@ -136,12 +136,19 @@ class TrackDataProvider {
       'limitToLast': '500',
       'print': 'pretty',
     };
+
     // gets a genre that we can query to the firebase database
     // this function is defined in the global functions area of the project.
     List inter = [];
     while (inter.length == 0) {
-      var queryGenre = filterToQueryGenre(trackQueryParams.genres);
-
+      var queryGenre;
+      // precedence is as follows: country > genre > energy
+      // when countries are selected, ignore the genre selections and query by country
+      if (trackQueryParams.countries.length == 0) {
+        queryGenre = filterToQueryGenre(trackQueryParams.genres);
+      } else {
+        queryGenre = filterToQueryGenre(trackQueryParams.countries);
+      }
       var genreQueryParams = {
         'orderBy': '"genres"',
         'equalTo': '%22${queryGenre}%22',
@@ -151,7 +158,8 @@ class TrackDataProvider {
       // initializing query variable in method scope
       var query;
 
-      if (trackQueryParams.genres.length == 0) {
+      if (trackQueryParams.genres.length == 0 &&
+          trackQueryParams.countries.length == 0) {
         //when there are no genres, query by energy
         query = energyQueryParams.entries
             .map((p) => '${p.key}=${p.value}')
@@ -219,4 +227,6 @@ class TrackDataProvider {
     print("The track id in the data layer is: ${track.trackId}");
     return track;
   }
+
+  //Future<TrackData> getTrackFromSentence(String sentence) async {}
 }
