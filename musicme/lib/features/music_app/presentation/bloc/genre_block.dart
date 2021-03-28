@@ -27,6 +27,9 @@ class GenreBloc extends Bloc<GenreEvent, List> {
       await genreProvider.removeUserGenres(event.genreInput);
       var params = await genreProvider.readParams('musicme');
       yield params.genres;
+    } else if (event is LoadGenreEvent) {
+      var params = await genreProvider.readParams('musicme');
+      yield params.genres;
     }
   }
 }

@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
-import 'package:universal_io/io.dart.';
 import 'dart:convert';
 
 // this is a class that will interact track_mood_ranges.json
@@ -36,7 +34,7 @@ class QueryParamsProvider {
     var jsonObject = JsonDecoder().convert(res.body);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
-
+    jsonObject['genres'] ??= [];
     if (!(jsonObject['genres'].contains(genreInput))) {
       jsonObject['genres'].add(genreInput);
       // writing the appended file.
@@ -63,7 +61,7 @@ class QueryParamsProvider {
     print(res.body);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
-    var output;
+    jsonObject['genres'] ??= [];
     if (jsonObject['genres'].contains(genreInput)) {
       jsonObject['genres'].remove(genreInput);
       // writing the appended file.
@@ -73,7 +71,6 @@ class QueryParamsProvider {
           'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$query.json',
           body: jsonString);
     }
-    print(output);
   }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////END USER GENRE

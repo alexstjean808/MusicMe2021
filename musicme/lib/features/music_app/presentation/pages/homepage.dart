@@ -23,6 +23,14 @@ class MusicMeHomePage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             leadingWidth: 150,
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  connectToSpotify();
+                },
+                child: Text("Connect To Spotify"),
+              ),
+            ],
             leading: Builder(
               builder: (context) => ElevatedButton(
                 onPressed: () {

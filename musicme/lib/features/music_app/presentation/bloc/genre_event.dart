@@ -18,3 +18,8 @@ class RemoveGenreEvent extends GenreEvent {
   @override
   List<Object> get props => [genreInput];
 }
+
+class LoadGenreEvent extends GenreEvent {
+  @override
+  List<Object> get props => [];
+}
