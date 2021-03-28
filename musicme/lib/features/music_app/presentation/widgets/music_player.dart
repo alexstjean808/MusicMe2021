@@ -28,8 +28,9 @@ class MusicPlayer extends StatelessWidget {
               ),
             ],
           ),
+          LikeDislikeButtons(),
           Padding(
-            padding: EdgeInsets.only(bottom: 40),
+            padding: EdgeInsets.only(bottom: 10),
             child: BlocBuilder<TrackBloc, TrackData>(
               builder: (context, trackData) {
                 if (trackData.name == null || trackData.artist == null) {
@@ -46,6 +47,43 @@ class MusicPlayer extends StatelessWidget {
           FeelingLuckyButton(),
         ],
       ),
+    );
+  }
+}
+
+class LikeDislikeButtons extends StatelessWidget {
+  const LikeDislikeButtons({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            primary: Colors.black,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: Icon(Icons.thumb_down, color: Colors.white),
+          ),
+          onPressed: () {}, // dislike button
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            primary: Colors.black,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: Icon(Icons.thumb_up, color: Colors.white),
+          ),
+          onPressed: () {}, // Like buttons
+        ),
+      ],
     );
   }
 }

@@ -1,7 +1,9 @@
 import 'dart:convert' as convert;
-import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:musicme/features/music_app/core/methods/global_functions.dart';
+import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
+import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
 import 'dart:async';
 import 'dart:math';
 import 'mood_data_provider.dart';
@@ -19,62 +21,58 @@ class TrackDataProvider {
     return moods[Random().nextInt(3)];
   }
 
-  List filterTrackAttributes(
-      {double lowRange,
-      double highRange,
-      String trackAttb,
-      List songKeyList,
-      var returnJSON}) {
-    //allows you to filter tracks based on a JSON key in the song... must be one of the attributes that is in doubles
-    // ignore: omit_local_variable_types
-    List suitableTracks = [];
-    var startIndex = 0;
-    for (var i = startIndex; i < songKeyList.length; i++) {
-      var currentSongKey = songKeyList[
-          i]; //currentSongKey is the highest identifier of a song from the database
-      var currentSong = returnJSON['$currentSongKey'];
-      //JSON object of one song in the loop
-      var currentSpotifyID = currentSong['id']; //spotify ID
-      var currentAttribute =
-          currentSong[trackAttb]; //danceability, energy, etc.
-      var cont =
-          (currentAttribute >= lowRange) && (currentAttribute <= highRange);
-      //returns true when the track attribute fits in the range
-      if (cont) {
-        suitableTracks.add(currentSpotifyID);
-      }
-    }
-    return suitableTracks;
+  List extractTrackIDs(Map trackMap) {
+    List suitableTrackId = [];
+    trackMap.forEach((key, value) {
+      suitableTrackId.add(trackMap[key]['id']);
+    });
+    return suitableTrackId;
   }
 
-  TrackQueryParams _getQueryParams(var moodIn) {
-    var moods = ['joy', 'anger', 'sadness'];
-    TrackQueryParams params = TrackQueryParams();
-    params.mood = moodIn;
+  Map filterTrackAttributes(
+      {String genre = 'none',
+      dynamic lowRange,
+      dynamic highRange,
+      String trackAttb,
+      Map returnJSON}) {
+    //allows you to filter tracks based on a JSON key in the song... must be one of the attributes that is in doubles
+    // ignore: omit_local_variable_types
+    var startIndex = 0;
+    var songKeyList = returnJSON.keys.toList();
 
-    if (moods.contains(moodIn) == false) {
-      params.mood =
-          _getRandomMood(); // if the mood doesnt exist then this function will return a random mood to work with.
-    }
-    print("the mood in the params object is: ${params.mood}");
-    if (params.mood == 'joy') {
-      params.major = 1;
-      params.danceability = [0.5, 1];
-      params.energy = [0.8, 1];
-    } else if (params.mood == 'sadness') {
-      params.major = 0;
-      params.danceability = [0, 0.4];
-      params.energy = [0, 0.6];
-    } else if (params.mood == 'anger') {
-      params.acousticness = [0, 0.6];
-      params.energy = [0.5, .9];
-    } else {
-      params.major = 1;
-      params.danceability = [0.5, 1];
-      params.energy = [0.6, 1]; // default Params to joy
+    for (var i = startIndex; i < songKeyList.length; i++) {
+      //currentSongKey is the highest identifier of a song from the database
+      var currentSongKey = songKeyList[i];
+      var currentSong = returnJSON['$currentSongKey'];
+      //JSON object of one song in the loop
+      //var currentSpotifyID = currentSong['id']; //spotify ID
+      var currentAttribute =
+          currentSong[trackAttb]; //danceability, energy, etc.
+      var inRange =
+          (currentAttribute >= lowRange) && (currentAttribute <= highRange);
+      //returns true when the track attribute fits in the range
+
+      // when no genre was inputted by user then skip this code.
+
+      if (!inRange) {
+        returnJSON.remove(currentSongKey);
+      }
     }
 
-    return params;
+    return returnJSON;
+  }
+
+// method that takes in queryParams and the mood and returns the correct param Ranges
+  Ranges _selectParamRangeFromMood(TrackQueryParams queryParams, var moodIn) {
+    if (moodIn == 'joy') {
+      return queryParams.trackMoodRanges.joyParams;
+    } else if (moodIn == 'sadness') {
+      return queryParams.trackMoodRanges.sadnessParams;
+    } else if (moodIn == 'anger') {
+      return queryParams.trackMoodRanges.angerParams;
+    }
+
+    return queryParams.trackMoodRanges.joyParams;
   }
 
   Future<TrackData> getFeelingLuckyTrack() async {
@@ -90,7 +88,7 @@ class TrackDataProvider {
     var query = params.entries.map((p) => '${p.key}=${p.value}').join('&');
 
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/tracks.json?$query');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?$query');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -105,76 +103,120 @@ class TrackDataProvider {
     return trackData;
   }
 
-  Future<TrackData> readData(String sentence) async {
-    // ignore: omit_local_variable_types
+// this gets a track from the database!
+  Future<TrackData> getTrackFromSentence(String sentence) async {
+    // all possible moods
+    var moods = ['joy', 'anger', 'sadness'];
+    // this gets the mood from the IBM tone analyser
     var moodDataProvider = MoodDataProvider();
+    // ibmData now has a mood string in it.
     var ibmData = await moodDataProvider.readData(sentence);
+    // here we are getting the document tone mood
     var mood = ibmData.documentTones.tones[0].toneId;
+    // logging mood to console.
     print(mood);
-    // ignore: omit_local_variable_types
-    TrackQueryParams params = _getQueryParams(mood);
+
+    // when IBM doesnt give us a mood of joy anger or sadness we generate a random mood
+    // from the moods array.
+    if (moods.contains(mood) == false) {
+      mood =
+          _getRandomMood(); // if the mood doesnt exist then this function will return a random mood to work with.
+    }
+    // Reading the data from track_query_params
+    var trackQueryParams = await QueryParamsProvider().readParams();
+    // now we will get all the ranges for whatever mood we got from IBM
+    Ranges ranges = _selectParamRangeFromMood(trackQueryParams, mood);
 
     // Query by energy!
+    // we always sort by energy first if there is no genre cause every single mood will have an energy param.
     var energyQueryParams = {
       'orderBy': '"energy"',
-      'startAt': '${params.energy[0]}',
-      'endAt': '${params.energy[1]}',
-      'limitToLast': '100',
+      'startAt': '${ranges.energy[0]}',
+      'endAt': '${ranges.energy[1]}',
+      'limitToLast': '500',
       'print': 'pretty',
     };
-    var query =
-        energyQueryParams.entries.map((p) => '${p.key}=${p.value}').join('&');
+    // gets a genre that we can query to the firebase database
+    // this function is defined in the global functions area of the project.
+    List inter = [];
+    while (inter.length == 0) {
+      var queryGenre = filterToQueryGenre(trackQueryParams.genres);
 
-    var response = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/tracks.json?$query');
-    if (response.statusCode != 200) {
-      throw Exception('http.get error: statusCode= ${response.statusCode}');
+      var genreQueryParams = {
+        'orderBy': '"genres"',
+        'equalTo': '%22${queryGenre}%22',
+        'limitToLast': '20',
+        'print': 'pretty'
+      };
+      // initializing query variable in method scope
+      var query;
+
+      if (trackQueryParams.genres.length == 0) {
+        //when there are no genres, query by energy
+        query = energyQueryParams.entries
+            .map((p) => '${p.key}=${p.value}')
+            .join('&');
+      } else {
+        //when there are genres, query by genres
+        query = genreQueryParams.entries
+            .map((p) => '${p.key}=${p.value}')
+            .join('&');
+      }
+      var queryUrl =
+          'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?$query';
+      print(queryUrl);
+
+      var response = await http.get(queryUrl);
+      if (response.statusCode != 200) {
+        throw Exception('http.get error: statusCode= ${response.statusCode}');
+      }
+      print(response.statusCode);
+      Map returnJSON =
+          convert.jsonDecode(response.body); //convert http response to JSON
+
+      // skipped initial query by energy if we started with the Genre query instead
+      if (trackQueryParams.genres.length != 0) {
+        returnJSON = filterTrackAttributes(
+            genre: queryGenre,
+            lowRange: ranges.energy[0],
+            highRange: ranges.energy[1],
+            trackAttb: 'danceability',
+            returnJSON: returnJSON);
+      }
+
+      if (mood == 'joy' || mood == 'sadness') {
+        returnJSON = filterTrackAttributes(
+            lowRange: ranges.danceability[0],
+            highRange: ranges.danceability[1],
+            trackAttb: 'danceability',
+            returnJSON: returnJSON);
+      } else if (mood == 'anger') {
+        returnJSON = filterTrackAttributes(
+            lowRange: ranges.acousticness[0],
+            highRange: ranges.acousticness[1],
+            trackAttb: 'acousticness',
+            returnJSON: returnJSON);
+      } else {
+        //default ranges are for joy
+        returnJSON = filterTrackAttributes(
+            lowRange: ranges.danceability[0],
+            highRange: ranges.danceability[1],
+            trackAttb: 'danceability',
+            returnJSON: returnJSON);
+        print('mood not detected');
+      }
+
+      // this gets a random track ID that fits our filter params.
+      print(returnJSON.length);
+      inter = extractTrackIDs(returnJSON);
+      print(inter);
+      print("inter bool:");
+      print(inter == []);
     }
-
-    var returnJSON =
-        convert.jsonDecode(response.body); //convert http response to JSON
-
-    var songKeyList = returnJSON.keys.toList();
-
-    if (params.mood == 'joy' || params.mood == 'sadness') {
-      returnJSON = filterTrackAttributes(
-          lowRange: params.danceability[0],
-          highRange: params.danceability[1],
-          trackAttb: 'danceability',
-          songKeyList: songKeyList,
-          returnJSON: returnJSON);
-    } else if (params.mood == 'anger') {
-      returnJSON = filterTrackAttributes(
-          lowRange: params.acousticness[0],
-          highRange: params.acousticness[1],
-          trackAttb: 'acousticness',
-          songKeyList: songKeyList,
-          returnJSON: returnJSON);
-    } else {
-      //default params are for joy
-      returnJSON = filterTrackAttributes(
-          lowRange: params.danceability[0],
-          highRange: params.danceability[1],
-          trackAttb: 'danceability',
-          songKeyList: songKeyList,
-          returnJSON: returnJSON);
-      print('mood not detected');
-    }
-
-    // aslong as it works!
-    var trackKeysLen = returnJSON.length;
-
-    var randNum =
-        Random().nextInt(trackKeysLen); // gives random number from 0 to length
-    print('Random Number: $randNum');
-
-    var trackID = returnJSON[randNum];
+    var trackID = getRandomFromList(inter);
 
     var track = TrackData(trackId: trackID);
     print("The track id in the data layer is: ${track.trackId}");
     return track;
   }
-
-// returns a random emotion
-
 }
