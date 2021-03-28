@@ -140,7 +140,13 @@ class TrackDataProvider {
     // gets a genre that we can query to the firebase database
     // this function is defined in the global functions area of the project.
     List inter = [];
+    int counter = 0;
+    // these three variables are attached to the TODO: below
+    var firstResponse;
+    var songsFromFirstQuery;
     while (inter.length == 0) {
+      //used to remember the first query to the database for error handling
+      counter = counter + 1;
       var queryGenre;
       // precedence is as follows: country > genre > energy
       // when countries are selected, ignore the genre selections and query by country
@@ -178,9 +184,17 @@ class TrackDataProvider {
       if (response.statusCode != 200) {
         throw Exception('http.get error: statusCode= ${response.statusCode}');
       }
+
       print(response.statusCode);
       Map returnJSON =
           convert.jsonDecode(response.body); //convert http response to JSON
+
+      // save the first response from the database in case we overfilter the mood
+      print('While Loop Count: ${counter}');
+      if (counter == 1) {
+        firstResponse = returnJSON;
+        songsFromFirstQuery = extractTrackIDs(firstResponse);
+      }
 
       // skipped initial query by energy if we started with the Genre query instead
       if (trackQueryParams.genres.length != 0) {
@@ -216,7 +230,13 @@ class TrackDataProvider {
 
       // this gets a random track ID that fits our filter params.
       print(returnJSON.length);
-      inter = extractTrackIDs(returnJSON);
+
+      // stops the loop after 10 attemps and assigns inter to the list of all the unfiltered trackID's
+      if (counter > 10) {
+        inter = songsFromFirstQuery;
+      } else {
+        inter = extractTrackIDs(returnJSON);
+      }
       print(inter);
       print("inter bool:");
       print(inter == []);
