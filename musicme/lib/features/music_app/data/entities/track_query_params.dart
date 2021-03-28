@@ -5,7 +5,7 @@
 class TrackQueryParams {
   String mood;
   final TrackMoodRanges trackMoodRanges;
-  final List<String> genres;
+  final List genres;
 
   TrackQueryParams(this.trackMoodRanges, this.genres);
   TrackQueryParams.fromJson(Map<String, dynamic> json)
@@ -14,25 +14,25 @@ class TrackQueryParams {
 }
 
 class TrackMoodRanges {
-  final Params joyParams;
-  final Params sadnessParams;
-  final Params angerParams;
+  final Ranges joyParams;
+  final Ranges sadnessParams;
+  final Ranges angerParams;
 
   TrackMoodRanges({this.joyParams, this.sadnessParams, this.angerParams});
   TrackMoodRanges.fromJson(Map<String, dynamic> json)
-      : joyParams = Params.fromJson(json['joy_params']),
-        sadnessParams = Params.fromJson(json['sadness_params']),
-        angerParams = Params.fromJson(json['anger_params']);
+      : joyParams = Ranges.fromJson(json['joy_params']),
+        sadnessParams = Ranges.fromJson(json['sadness_params']),
+        angerParams = Ranges.fromJson(json['anger_params']);
 }
 
-class Params {
-  final bool major;
-  final List<int> danceability; // does not exist for anger
-  final List<int> energy;
-  final List<int> acousticness; // only exists anger
+class Ranges {
+  final int major;
+  final List danceability; // does not exist for anger
+  final List energy;
+  final List acousticness; // only exists anger
 
-  Params({this.major, this.danceability, this.energy, this.acousticness});
-  Params.fromJson(Map<String, dynamic> json)
+  Ranges({this.major, this.danceability, this.energy, this.acousticness});
+  Ranges.fromJson(Map<String, dynamic> json)
       : major = json['major'],
         danceability = json['danceability'],
         energy = json['energy'],

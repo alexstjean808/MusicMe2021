@@ -18,13 +18,15 @@ class QueryParamsProvider {
     //TODO impliment method!
   }
 
+  updateUserGenres(String genreInput) async {}
+
   // this method will read whatever mood ranges are defined for a user
   // in track_mood_ranges.json
   // INPUT: nothing
   // CONTENT: take info from track_query_params.json
   // OUTPUT: A Track Mood Ranges object that we can use in the track_data_provider.dart
   // in order to query the correct track.
-  Future<TrackQueryParams> readParamRanges() async {
+  Future<TrackQueryParams> readParams() async {
     print("Current directory is ${Directory.current}");
 
     var filePath =
@@ -35,7 +37,12 @@ class QueryParamsProvider {
     // This opens are reading the data from track_query_params.
     var input = await File(filePath).readAsString();
     var jsonFile = JsonDecoder().convert(input);
+    print(jsonFile);
     var trackQueryParams = TrackQueryParams.fromJson(jsonFile);
+    print("We finished reading the Json file");
+    // debugging
+    print(
+        "the the energy array is ${trackQueryParams.trackMoodRanges.angerParams.energy}");
     return trackQueryParams;
   }
 

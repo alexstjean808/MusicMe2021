@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:musicme/features/music_app/core/methods/getRandomFromList.dart';
+import 'package:musicme/features/music_app/core/methods/global_functions.dart';
+import 'package:musicme/features/music_app/data/data_provider/dont_look_at_me.dart';
 
 void main() {
-  var testList = ['myItem1', 'myItem2', '3', '4', '5'];
-  test('When given a list of a length 5, one value is returned ', () async {
+  test('When given a list of a length , one value is returned ', () async {
     //ARRANGE:
-    var returnedVal = getRandomFromList(testList);
+    var returnedVal = getRandomFromList(genresFromArray['Pop']);
     print(returnedVal);
     //ACT:
     var comparingList = [returnedVal];

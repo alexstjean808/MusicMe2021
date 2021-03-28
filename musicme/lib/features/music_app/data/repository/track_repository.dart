@@ -11,7 +11,8 @@ class TrackRepository {
   }
 
   Future<TrackData> getAllDataThatMeetsRequirements(String sentence) async {
-    final TrackData track = await trackDataProvider.getTrack(sentence);
+    final TrackData track =
+        await trackDataProvider.getTrackFromSentence(sentence);
     return track;
   }
 }
