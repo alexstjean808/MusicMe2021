@@ -76,7 +76,7 @@ class TrackDataProvider {
   }
 
   Future<TrackData> getFeelingLuckyTrack() async {
-    var range = 15000;
+    var range = 800000;
     var randomNumber = Random().nextInt(range);
 
     //parameters are key for the firebase and a random number between 0 and the length of the database that we hardcoded
@@ -136,12 +136,25 @@ class TrackDataProvider {
       'limitToLast': '500',
       'print': 'pretty',
     };
+
     // gets a genre that we can query to the firebase database
     // this function is defined in the global functions area of the project.
     List inter = [];
+    int counter = 0;
+    // these three variables are attached to the TODO: below
+    var firstResponse;
+    var songsFromFirstQuery;
     while (inter.length == 0) {
-      var queryGenre = filterToQueryGenre(trackQueryParams.genres);
-
+      //used to remember the first query to the database for error handling
+      counter = counter + 1;
+      var queryGenre;
+      // precedence is as follows: country > genre > energy
+      // when countries are selected, ignore the genre selections and query by country
+      if (trackQueryParams.countries.length == 0) {
+        queryGenre = filterToQueryGenre(trackQueryParams.genres);
+      } else {
+        queryGenre = filterToQueryGenre(trackQueryParams.countries);
+      }
       var genreQueryParams = {
         'orderBy': '"genres"',
         'equalTo': '%22${queryGenre}%22',
@@ -151,7 +164,8 @@ class TrackDataProvider {
       // initializing query variable in method scope
       var query;
 
-      if (trackQueryParams.genres.length == 0) {
+      if (trackQueryParams.genres.length == 0 &&
+          trackQueryParams.countries.length == 0) {
         //when there are no genres, query by energy
         query = energyQueryParams.entries
             .map((p) => '${p.key}=${p.value}')
@@ -170,9 +184,17 @@ class TrackDataProvider {
       if (response.statusCode != 200) {
         throw Exception('http.get error: statusCode= ${response.statusCode}');
       }
+
       print(response.statusCode);
       Map returnJSON =
           convert.jsonDecode(response.body); //convert http response to JSON
+
+      // save the first response from the database in case we overfilter the mood
+      print('While Loop Count: ${counter}');
+      if (counter == 1) {
+        firstResponse = returnJSON;
+        songsFromFirstQuery = extractTrackIDs(firstResponse);
+      }
 
       // skipped initial query by energy if we started with the Genre query instead
       if (trackQueryParams.genres.length != 0) {
@@ -208,7 +230,13 @@ class TrackDataProvider {
 
       // this gets a random track ID that fits our filter params.
       print(returnJSON.length);
-      inter = extractTrackIDs(returnJSON);
+
+      // stops the loop after 10 attemps and assigns inter to the list of all the unfiltered trackID's
+      if (counter > 10) {
+        inter = songsFromFirstQuery;
+      } else {
+        inter = extractTrackIDs(returnJSON);
+      }
       print(inter);
       print("inter bool:");
       print(inter == []);
@@ -219,4 +247,6 @@ class TrackDataProvider {
     print("The track id in the data layer is: ${track.trackId}");
     return track;
   }
+
+  //Future<TrackData> getTrackFromSentence(String sentence) async {}
 }

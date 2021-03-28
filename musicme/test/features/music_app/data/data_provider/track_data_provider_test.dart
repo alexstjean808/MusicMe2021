@@ -8,7 +8,7 @@ void main() {
 
     // ARRANGE
     var trackId = await trackDataProvider
-        .getTrackFromSentence("happy happy happy happy happy");
+        .getTrackFromSentence("sad sad sad sad sad sad sad sad sad sad");
     // ACT
     print("${trackId.name} + ${trackId.trackId} + ${trackId.artist}");
     //ASSERT
