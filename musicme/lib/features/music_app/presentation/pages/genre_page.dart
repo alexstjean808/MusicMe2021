@@ -1,4 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
+import 'package:musicme/features/music_app/presentation/bloc/genre_block.dart';
+import 'package:musicme/features/music_app/presentation/bloc/genre_event.dart';
 
 class GenrePage extends StatelessWidget {
   final List _genres = [
@@ -27,26 +33,29 @@ class GenrePage extends StatelessWidget {
   ]; // this will be images later
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.arrow_back)),
-        ),
-        body: Center(
-          child: ListView.builder(
-              padding: EdgeInsets.all(100),
-              itemCount: _genres.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GenreRow(
-                  colors: _colors[index],
-                  tileSpacing: 100,
-                  genreNames: _genres[index],
-                );
-              }),
-        ));
+    return BlocProvider(
+      create: (context) => GenreBloc([], QueryParamsProvider()),
+      child: Scaffold(
+          appBar: AppBar(
+            leading: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.arrow_back)),
+          ),
+          body: Center(
+            child: ListView.builder(
+                padding: EdgeInsets.all(100),
+                itemCount: _genres.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GenreRow(
+                    colors: _colors[index],
+                    tileSpacing: 100,
+                    genreNames: _genres[index],
+                  );
+                }),
+          )),
+    );
   }
 }
 
@@ -86,15 +95,87 @@ class GenreBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      height: 200,
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: color),
-        child: Center(
-          child: Text(genreName),
+    return NotSelectedGenreBox(color: color, genreName: genreName);
+  }
+}
+
+class NotSelectedGenreBox extends StatelessWidget {
+  const NotSelectedGenreBox({
+    Key key,
+    @required this.color,
+    @required this.genreName,
+  }) : super(key: key);
+
+  final Color color;
+  final String genreName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            BlocProvider.of<GenreBloc>(context)
+                .add(AddGenreEvent(genreInput: this.genreName));
+          },
+          child: SizedBox(
+            width: 200,
+            height: 200,
+            child: DecoratedBox(
+              decoration: BoxDecoration(color: color),
+              child: Center(
+                child: Text(genreName),
+              ),
+            ),
+          ),
         ),
-      ),
+        SizedBox(height: 10)
+      ],
+    );
+  }
+}
+
+class SelectedGenreBox extends StatelessWidget {
+  const SelectedGenreBox({
+    Key key,
+    @required this.color,
+    @required this.genreName,
+  }) : super(key: key);
+
+  final Color color;
+  final String genreName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            BlocProvider.of<GenreBloc>(context)
+                .add(RemoveGenreEvent(genreInput: this.genreName));
+          },
+          child: Stack(
+            children: [
+              SizedBox(
+                width: 200,
+                height: 200,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: color,
+                    border: Border.all(width: 8, color: Colors.blue),
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                  ),
+                  child: Center(
+                    child: Text(genreName),
+                  ),
+                ),
+              ),
+              Icon(Icons.check_circle),
+            ],
+          ),
+        ),
+        SizedBox(height: 10)
+      ],
     );
   }
 }

@@ -5,11 +5,7 @@ Future<void> connectToSpotify() async {
   try {
     await SpotifySdk.connectToSpotifyRemote(
       clientId: '47a74f6401d343debec2c0f6634e0aeb',
-<<<<<<< HEAD
       redirectUrl: 'http://localhost:63389',
-=======
-      redirectUrl: 'http%3A%2F%2Flocalhost%3A55043%2F%23%2F',
->>>>>>> feature/LikeDislike
     );
     print("connected");
   } on PlatformException catch (e) {

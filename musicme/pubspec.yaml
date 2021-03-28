@@ -20,6 +20,7 @@ dependencies:
   mockito: 4.1.4
   http: ^0.12.2
   test:
+  universal_io: 1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +31,9 @@ flutter:
 
   assets:
     - assets/images/MobileAppLayout.jpg
+    - lib/features/music_app/data/local_data/input_log.json
+    - lib/features/music_app/data/liked_songs.json
+    - lib/features/music_app/data/track_query_params.json
 
   fonts:
     - family: Monotype-Corsiva

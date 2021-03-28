@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:musicme/features/music_app/data/data_provider/dont_look_at_me.dart';
 
 dynamic getRandomFromList(List myList) {
-  if (myList.length == 0) return [];
+  if (myList == null || myList.length == 0) return [];
   var myListLength = myList.length;
   var randomIndex = Random().nextInt(myListLength);
   var listItem = myList[randomIndex];

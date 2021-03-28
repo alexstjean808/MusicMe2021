@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicme/features/music_app/core/methods/connect_to_spotify.dart';
+import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/track_data_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
@@ -16,8 +17,9 @@ class MusicMeHomePage extends StatelessWidget {
     return MaterialApp(
       home: BlocProvider(
         create: (context) => TrackBloc(
-            TrackData(trackId: '7GhIk7Il098yCjg4BQjzvb'),
-            TrackRepository(TrackDataProvider())),
+          TrackData(trackId: '7GhIk7Il098yCjg4BQjzvb'),
+          TrackRepository(TrackDataProvider()),
+        ),
         child: Scaffold(
           appBar: AppBar(
             leadingWidth: 150,

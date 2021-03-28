@@ -47,7 +47,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
         TrackData trackData =
             await repository.getAllDataThatMeetsRequirements(event.sentence);
         _playSpotifyTrack(trackData);
-        sleep(Duration(seconds: 1)); // giving time for call to spotify
+
         trackData = await _updateTrackData(trackData);
         // updating the trackData for name and artist
 
