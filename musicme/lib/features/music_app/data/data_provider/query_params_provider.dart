@@ -86,7 +86,7 @@ class QueryParamsProvider {
     var jsonObject = JsonDecoder().convert(res.body);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
-
+    jsonObject['countries'] ??= [];
     if (!(jsonObject['countries'].contains(countryInput))) {
       jsonObject['countries'].add(countryInput);
       // writing the appended file.
@@ -112,6 +112,7 @@ class QueryParamsProvider {
     print(res.body);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
+    jsonObject['contries'] ??= [];
     if (jsonObject['countries'].contains(countryInput)) {
       jsonObject['countries'].remove(countryInput);
       // writing the appended file.

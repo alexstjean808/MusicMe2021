@@ -115,7 +115,7 @@ void main() {
     // in this case [...]
     expect(output.countries, expected);
   });
-  test('Correctly removes provided genres to the JSON file', () async {
+  test('Correctly removes provided countries to the JSON file', () async {
     // ARRANGE
     var testQueryParam = QueryParamsProvider();
     // reading the current file (this is dependedt on file reading working)

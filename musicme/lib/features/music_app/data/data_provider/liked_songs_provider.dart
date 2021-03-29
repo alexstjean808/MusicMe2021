@@ -12,6 +12,8 @@ class LikedSongsProvider {
   // this function will most likely call on the readData function to see what is already there.
   removeData(TrackData likedSong) async {
     //TODO impliment method!
+    print('Hello Faith ');
+    return "salmon";
   }
 
   // When the user liked a song this method will be called to update that song
@@ -22,6 +24,10 @@ class LikedSongsProvider {
   // this function will most likely call on the readData function to see what is already there.
   addData(TrackData likedSong) async {
     //TODO impliment method!
+  }
+
+  test(String something) async {
+    print("pls work");
   }
 
   // this method will read whatever songs have been liked by the user
