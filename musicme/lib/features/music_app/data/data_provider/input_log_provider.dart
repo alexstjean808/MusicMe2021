@@ -31,9 +31,8 @@ class InputLogProvider {
     }
     print(res.body);
     var jsonObject = JsonDecoder().convert(res.body);
-    // adding the genre to the existing list of genres in track_query_params.json
-    // it only adds the genre if it doesnt exist already in the array.
-
+    // if there was null logged then make the list empty.
+    jsonObject['inputs'] ??= [];
     if (!(jsonObject['inputs'].contains(logInput))) {
       jsonObject['inputs'].add(logInput);
       // writing the appended file.

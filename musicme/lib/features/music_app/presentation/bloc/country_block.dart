@@ -11,7 +11,7 @@ class CountryBloc extends Bloc<CountryEvent, List> {
     if (event is AddCountryEvent) {
       var params;
       try {
-        await countryProvider.addUserCountry(event.countryInput);
+        await countryProvider.addUserCountries(event.countryInput);
       } catch (e) {
         print("we could not write to the file");
       }
@@ -23,7 +23,7 @@ class CountryBloc extends Bloc<CountryEvent, List> {
 
       yield params.countries;
     } else if (event is RemoveCountryEvent) {
-      await countryProvider.removeUserCountry(event.countryInput);
+      await countryProvider.removeUserCountries(event.countryInput);
       var params = await countryProvider.readParams('musicme');
       yield params.countries;
     } else if (event is LoadCountryEvent) {

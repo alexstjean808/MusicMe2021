@@ -126,7 +126,7 @@ class QueryParamsProvider {
 /////////////////////////////////////////////////////////////////////TESTING COUNTRY
 
   // this method will read whatever mood ranges are defined for a user
-  // in track_mood_ranges.json
+  // in track_mood_ranges.json on the firebase server
   // INPUT: nothing
   // CONTENT: take info from track_query_params.json
   // OUTPUT: A Track Mood Ranges object that we can use in the track_data_provider.dart

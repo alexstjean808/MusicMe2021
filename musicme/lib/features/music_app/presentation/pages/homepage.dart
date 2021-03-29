@@ -7,6 +7,7 @@ import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
 import 'package:musicme/features/music_app/presentation/pages/genre_page.dart';
+import 'package:musicme/features/music_app/presentation/widgets/Bubble.dart';
 import 'package:musicme/features/music_app/presentation/widgets/search_bar.dart';
 import 'package:musicme/features/music_app/presentation/widgets/welcome_message.dart';
 
@@ -42,31 +43,28 @@ class MusicMeHomePage extends StatelessWidget {
             ),
           ),
           resizeToAvoidBottomInset: false,
-          body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/MobileAppLayout.jpg"),
-                fit: BoxFit.cover,
+          body: Stack(
+            children: [
+              Bubbles(),
+              Column(
+                children: [
+                  WelcomeMessage(),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  SearchBar(),
+                  Builder(
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * .08,
+                      );
+                    },
+                  ),
+                  // MusicPlayer(),
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
               ),
-            ),
-            child: Column(
-              children: [
-                WelcomeMessage(),
-                SizedBox(
-                  height: 30,
-                ),
-                SearchBar(),
-                Builder(
-                  builder: (BuildContext context) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height * .08,
-                    );
-                  },
-                ),
-                // MusicPlayer(),
-              ],
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
+            ],
           ),
         ),
       ),
