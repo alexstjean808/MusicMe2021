@@ -6,6 +6,7 @@ import 'package:musicme/features/music_app/data/data_provider/track_data_provide
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
+import 'package:musicme/features/music_app/presentation/pages/country_page.dart';
 import 'package:musicme/features/music_app/presentation/pages/genre_page.dart';
 import 'package:musicme/features/music_app/presentation/widgets/Bubble.dart';
 import 'package:musicme/features/music_app/presentation/widgets/search_bar.dart';
@@ -25,6 +26,16 @@ class MusicMeHomePage extends StatelessWidget {
           appBar: AppBar(
             leadingWidth: 150,
             actions: [
+              Builder(
+                builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CountryPage()));
+                    },
+                    child: Text('Countries')),
+              ),
               ElevatedButton(
                 onPressed: () {
                   connectToSpotify();

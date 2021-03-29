@@ -29,9 +29,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/MobileAppLayout.jpg
     - lib/features/music_app/data/liked_songs.json
-
+    - assets/images/
   fonts:
     - family: Monotype-Corsiva
       fonts:

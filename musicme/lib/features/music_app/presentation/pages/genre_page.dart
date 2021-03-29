@@ -20,50 +20,52 @@ class GenrePage extends StatelessWidget {
     ['Traditional Music', 'Wack']
   ];
   // these are colors but will be image URI's when we find images we want
-  final List _colors = [
-    [Colors.amber, Colors.blue],
-    [Colors.red, Colors.green],
-    [Colors.green, Colors.amber],
-    [Colors.green, Colors.yellow],
-    [Colors.blue, Colors.amber],
-    [Colors.purple, Colors.yellow],
-    [Colors.amber, Colors.amber],
-    [Colors.yellow, Colors.yellow],
-    [Colors.amber, Colors.amber]
+  final List _imageAssets = [
+    ['assets/images/Pop.jpg', 'assets/images/Rock.jpg'],
+    ['assets/images/Rap.jpg', 'assets/images/Electronic.jpg'],
+    ['assets/images/Alternative.png', 'assets/images/Indie.jpg'],
+    ['assets/images/Metal.jpg', 'assets/images/Punk.jpg'],
+    ['assets/images/Post-Punk.png', 'assets/images/Folk.jpg'],
+    ['assets/images/Country.jpg', 'assets/images/Ambient.jpg'],
+    ['assets/images/RnB.jpg', 'assets/images/Jazz.jpg'],
+    ['assets/images/Classical.jpg', 'assets/images/Spiritual.jpg'],
+    ['assets/images/Traditional.jpg', 'assets/images/Wack.png']
   ]; // this will be images later
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => GenreBloc([], QueryParamsProvider()),
       child: Scaffold(
-          appBar: AppBar(
-            leading: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back)),
+        appBar: AppBar(
+          leading: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back)),
+        ),
+        body: Center(
+          child: ListView.builder(
+            itemCount: _genres.length,
+            itemBuilder: (BuildContext context, int index) {
+              BlocProvider.of<GenreBloc>(context).add(LoadGenreEvent());
+              return GenreRow(
+                imageAssets: _imageAssets[index],
+                tileSpacing: 0,
+                genreNames: _genres[index],
+              );
+            },
           ),
-          body: Center(
-            child: ListView.builder(
-                itemCount: _genres.length,
-                itemBuilder: (BuildContext context, int index) {
-                  BlocProvider.of<GenreBloc>(context).add(LoadGenreEvent());
-                  return GenreRow(
-                    colors: _colors[index],
-                    tileSpacing: 0,
-                    genreNames: _genres[index],
-                  );
-                }),
-          )),
+        ),
+      ),
     );
   }
 }
 
 class GenreRow extends StatelessWidget {
-  final List<Color> colors; // max size is 2 for now
+  final List<String> imageAssets; // max size is 2 for now
   final List<String> genreNames; // max size is 2 now
   final double tileSpacing;
-  GenreRow({this.colors, this.genreNames, this.tileSpacing});
+  GenreRow({this.imageAssets, this.genreNames, this.tileSpacing});
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +73,14 @@ class GenreRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         GenreBox(
-          color: colors[0],
+          imageAsset: imageAssets[0],
           genreName: genreNames[0],
         ),
         SizedBox(
           width: tileSpacing,
         ),
         GenreBox(
-          color: colors[1],
+          imageAsset: imageAssets[1],
           genreName: genreNames[1],
         ),
       ],
@@ -88,19 +90,20 @@ class GenreRow extends StatelessWidget {
 
 class GenreBox extends StatelessWidget {
   // for now showing color but it will display an image later
-  final Color color;
+  final String imageAsset;
   final String genreName;
 
-  GenreBox({this.color, this.genreName});
+  GenreBox({this.imageAsset, this.genreName});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GenreBloc, List>(
       builder: (context, genres) {
         if (genres.contains(genreName)) {
-          return SelectedGenreBox(color: color, genreName: genreName);
+          return SelectedGenreBox(imageAsset: imageAsset, genreName: genreName);
         } else {
-          return NotSelectedGenreBox(color: color, genreName: genreName);
+          return NotSelectedGenreBox(
+              imageAsset: imageAsset, genreName: genreName);
         }
       },
     );
@@ -110,11 +113,11 @@ class GenreBox extends StatelessWidget {
 class NotSelectedGenreBox extends StatelessWidget {
   const NotSelectedGenreBox({
     Key key,
-    @required this.color,
+    @required this.imageAsset,
     @required this.genreName,
   }) : super(key: key);
 
-  final Color color;
+  final String imageAsset;
   final String genreName;
 
   @override
@@ -129,15 +132,12 @@ class NotSelectedGenreBox extends StatelessWidget {
                   .add(AddGenreEvent(genreInput: this.genreName));
             },
             child: SizedBox(
-              width: 175,
-              height: 175,
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: color),
-                child: Center(
-                  child: Text(genreName),
-                ),
-              ),
-            ),
+                width: 175, height: 175, child: Image.asset(imageAsset)),
+          ),
+          SizedBox(height: 5),
+          Text(
+            genreName,
+            style: BoxCaption(),
           ),
           SizedBox(height: 10)
         ],
@@ -146,14 +146,19 @@ class NotSelectedGenreBox extends StatelessWidget {
   }
 }
 
+TextStyle BoxCaption() {
+  return TextStyle(
+      fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold);
+}
+
 class SelectedGenreBox extends StatelessWidget {
   const SelectedGenreBox({
     Key key,
-    @required this.color,
+    @required this.imageAsset,
     @required this.genreName,
   }) : super(key: key);
 
-  final Color color;
+  final String imageAsset;
   final String genreName;
 
   @override
@@ -174,12 +179,9 @@ class SelectedGenreBox extends StatelessWidget {
                   height: 175,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: color,
+                      image: DecorationImage(image: AssetImage(imageAsset)),
                       border: Border.all(width: 8, color: Colors.blue),
                       borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
-                    child: Center(
-                      child: Text(genreName),
                     ),
                   ),
                 ),
@@ -187,6 +189,8 @@ class SelectedGenreBox extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: 5),
+          Text(genreName, style: BoxCaption()),
           SizedBox(height: 10)
         ],
       ),
