@@ -97,4 +97,43 @@ void main() {
     // in this case [..., 'Pop']
     expect(output.genres, expected);
   });
+//////////////////////////////////////////////////TESTING COUNTRIES
+  test('Correctly does not add duplicate genres', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    // reading the current file (this is dependedt on file reading working)
+    // this checks to see
+    var current = await testQueryParam.readParams("musicme");
+    var expected = current.countries;
+    // ACT
+    // adding Pop to the list
+    await testQueryParam.addUserCountries('Uganda');
+    var output = await testQueryParam.readParams("musicme");
+    // ASSERT
+    // ooutput should be the same as what was in the file before cause we tried to add a
+    // genre that already existed.
+    // in this case [...]
+    expect(output.countries, expected);
+  });
+  test('Correctly removes provided genres to the JSON file', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    // reading the current file (this is dependedt on file reading working)
+    // this checks to see
+    var current = await testQueryParam.readParams("musicme");
+    current.countries.remove('Uganda');
+
+    var expected = current.countries;
+    // ACT
+    // adding Pop to the list
+    await testQueryParam.removeUserCountries('Uganda');
+
+    var output = await testQueryParam.readParams("musicme");
+    // ASSERT
+    // output should be first list read + string that was added
+    // in this case [..., 'Pop']
+    expect(output.countries, expected);
+  });
+
+//////////////////////////////////////////////////END TESTING COUNTRIES
 }

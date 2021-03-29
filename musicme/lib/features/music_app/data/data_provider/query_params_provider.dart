@@ -76,7 +76,7 @@ class QueryParamsProvider {
 /////////////////////////////////////////////////////////////////////////////////////////////////////END USER GENRE
 
 ////////////////////////////////////////////////////////////////////TESTING COUNTRY
-  addUserCountry(String countryInput, [var user = 'musicme']) async {
+  addUserCountries(String countryInput, [var user = 'musicme']) async {
     var res = await http.get(
         'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${user}.json');
     if (res.statusCode != 200) {
@@ -102,7 +102,7 @@ class QueryParamsProvider {
   // input string of a genre the user want to not query with
   // content: opens track_query_params.json and appends the file
   // returns: nothing.
-  removeUserCountry(String countryInput, [String user = 'musicme']) async {
+  removeUserCountries(String countryInput, [String user = 'musicme']) async {
     var res = await http.get(
         'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${user}.json');
     if (res.statusCode != 200) {
