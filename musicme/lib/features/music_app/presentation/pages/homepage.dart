@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicme/features/music_app/core/methods/connect_to_spotify.dart';
-import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/track_data_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
@@ -9,6 +8,7 @@ import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
 import 'package:musicme/features/music_app/presentation/pages/country_page.dart';
 import 'package:musicme/features/music_app/presentation/pages/genre_page.dart';
 import 'package:musicme/features/music_app/presentation/widgets/Bubble.dart';
+import 'package:musicme/features/music_app/presentation/widgets/music_player.dart';
 import 'package:musicme/features/music_app/presentation/widgets/search_bar.dart';
 import 'package:musicme/features/music_app/presentation/widgets/welcome_message.dart';
 
@@ -19,7 +19,7 @@ class MusicMeHomePage extends StatelessWidget {
     return MaterialApp(
       home: BlocProvider(
         create: (context) => TrackBloc(
-          TrackData(trackId: '7GhIk7Il098yCjg4BQjzvb'),
+          TrackData(mood: 'joy', trackId: '7GhIk7Il098yCjg4BQjzvb'),
           TrackRepository(TrackDataProvider()),
         ),
         child: Scaffold(
@@ -56,7 +56,17 @@ class MusicMeHomePage extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              Bubbles(),
+              BlocBuilder<TrackBloc, TrackData>(builder: (context, trackData) {
+                if (trackData.mood == 'joy') {
+                  return Bubbles(color: Colors.yellow);
+                } else if (trackData.mood == 'sadness') {
+                  return Bubbles(color: Colors.deepPurple);
+                } else if (trackData.mood == 'anger') {
+                  return Bubbles(color: Colors.red);
+                } else {
+                  return Bubbles(color: Colors.green);
+                }
+              }),
               Column(
                 children: [
                   WelcomeMessage(),
@@ -64,6 +74,9 @@ class MusicMeHomePage extends StatelessWidget {
                     height: 30,
                   ),
                   SearchBar(),
+                  Container(
+                      child: FeelingLuckyButton(),
+                      padding: EdgeInsets.only(top: 10)),
                   Builder(
                     builder: (BuildContext context) {
                       return SizedBox(

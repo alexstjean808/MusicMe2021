@@ -10,7 +10,7 @@ class GenrePage extends StatelessWidget {
   final List _genres = [
     // list of genres we want to display
     ['Pop', 'Rock'],
-    ['Hip-hop / Rap', 'Electronic'],
+    ['Hip-Hop / Rap', 'Electronic'],
     ['Alternative', 'Indie'],
     ['Metal', 'Punk'],
     ['Post-Punk', 'Folk'],

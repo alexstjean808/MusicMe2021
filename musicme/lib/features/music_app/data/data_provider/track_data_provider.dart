@@ -99,7 +99,7 @@ class TrackDataProvider {
     var trueSongNumber = returnJSON.keys.toList()[0];
 
     var randomSongId = returnJSON[trueSongNumber]['id'];
-    var trackData = TrackData(trackId: randomSongId);
+    var trackData = TrackData(mood: _getRandomMood(), trackId: randomSongId);
     return trackData;
   }
 
@@ -242,11 +242,145 @@ class TrackDataProvider {
       print(inter == []);
     }
     var trackID = getRandomFromList(inter);
-
-    var track = TrackData(trackId: trackID);
+    // we  give the track a mood so we can update the background in the application.
+    var track = TrackData(mood: mood, trackId: trackID);
     print("The track id in the data layer is: ${track.trackId}");
     return track;
   }
 
-  //Future<TrackData> getTrackFromSentence(String sentence) async {}
+  Future<TrackData> getTrackFromLastMood() async {
+    // this gets the mood from the IBM tone analyser
+    var moodDataProvider = MoodDataProvider();
+    // ibmData now has a mood string in it.
+    ;
+    // here we are getting the document tone mood
+    var mood = moodDataProvider.getLastMoodFromHistory();
+    // logging mood to console.
+    print(mood);
+
+    // Reading the data from track_query_params
+    var trackQueryParams = await QueryParamsProvider().readParams('musicme');
+    // now we will get all the ranges for whatever mood we got from IBM
+    Ranges ranges = _selectParamRangeFromMood(trackQueryParams, mood);
+
+    // Query by energy!
+    // we always sort by energy first if there is no genre cause every single mood will have an energy param.
+    var energyQueryParams = {
+      'orderBy': '"energy"',
+      'startAt': '${ranges.energy[0]}',
+      'endAt': '${ranges.energy[1]}',
+      'limitToLast': '500',
+      'print': 'pretty',
+    };
+
+    // gets a genre that we can query to the firebase database
+    // this function is defined in the global functions area of the project.
+    List inter = [];
+    int counter = 0;
+    // these three variables are attached to the TODO: below
+    var firstResponse;
+    var songsFromFirstQuery;
+    while (inter.length == 0) {
+      //used to remember the first query to the database for error handling
+      counter = counter + 1;
+      var queryGenre;
+      // precedence is as follows: country > genre > energy
+      // when countries are selected, ignore the genre selections and query by country
+      if (trackQueryParams.countries.length == 0) {
+        queryGenre = filterToQueryGenre(trackQueryParams.genres);
+      } else {
+        queryGenre = filterToQueryGenre(trackQueryParams.countries);
+      }
+      var genreQueryParams = {
+        'orderBy': '"genres"',
+        'equalTo': '%22${queryGenre}%22',
+        'limitToLast': '20',
+        'print': 'pretty'
+      };
+      // initializing query variable in method scope
+      var query;
+
+      if (trackQueryParams.genres.length == 0 &&
+          trackQueryParams.countries.length == 0) {
+        //when there are no genres, query by energy
+        query = energyQueryParams.entries
+            .map((p) => '${p.key}=${p.value}')
+            .join('&');
+      } else {
+        //when there are genres, query by genres
+        query = genreQueryParams.entries
+            .map((p) => '${p.key}=${p.value}')
+            .join('&');
+      }
+      var queryUrl =
+          'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?$query';
+      print(queryUrl);
+
+      var response = await http.get(queryUrl);
+      if (response.statusCode != 200) {
+        throw Exception('http.get error: statusCode= ${response.statusCode}');
+      }
+
+      print(response.statusCode);
+      Map returnJSON =
+          convert.jsonDecode(response.body); //convert http response to JSON
+
+      // save the first response from the database in case we overfilter the mood
+      print('While Loop Count: ${counter}');
+      if (counter == 1) {
+        firstResponse = returnJSON;
+        songsFromFirstQuery = extractTrackIDs(firstResponse);
+      }
+
+      // skipped initial query by energy if we started with the Genre query instead
+      if (trackQueryParams.genres.length != 0) {
+        returnJSON = filterTrackAttributes(
+            genre: queryGenre,
+            lowRange: ranges.energy[0],
+            highRange: ranges.energy[1],
+            trackAttb: 'danceability',
+            returnJSON: returnJSON);
+      }
+
+      if (mood == 'joy' || mood == 'sadness') {
+        returnJSON = filterTrackAttributes(
+            lowRange: ranges.danceability[0],
+            highRange: ranges.danceability[1],
+            trackAttb: 'danceability',
+            returnJSON: returnJSON);
+      } else if (mood == 'anger') {
+        returnJSON = filterTrackAttributes(
+            lowRange: ranges.acousticness[0],
+            highRange: ranges.acousticness[1],
+            trackAttb: 'acousticness',
+            returnJSON: returnJSON);
+      } else {
+        //default ranges are for joy
+        returnJSON = filterTrackAttributes(
+            lowRange: ranges.danceability[0],
+            highRange: ranges.danceability[1],
+            trackAttb: 'danceability',
+            returnJSON: returnJSON);
+        print('mood not detected');
+      }
+
+      // this gets a random track ID that fits our filter params.
+      print(returnJSON.length);
+
+      // stops the loop after 10 attemps and assigns inter to the list of all the unfiltered trackID's
+      if (counter > 10) {
+        inter = songsFromFirstQuery;
+      } else {
+        inter = extractTrackIDs(returnJSON);
+      }
+      print(inter);
+      print("inter bool:");
+      print(inter == []);
+    }
+    var trackID = getRandomFromList(inter);
+    // we  give the track a mood so we can update the background in the application.
+    var track = TrackData(mood: mood, trackId: trackID);
+    print("The track id in the data layer is: ${track.trackId}");
+    return track;
+  }
 }

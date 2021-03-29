@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-
+import '../local_data/mood_history.dart';
 import 'package:musicme/features/music_app/data/entities/ibm_data.dart';
 
 /* moodDataProvider.dart
@@ -12,6 +12,16 @@ Returns the main mood from each sentence
 */
 
 class MoodDataProvider {
+  // Storing the history of moods in local storage of a dart
+  _storeMoodHistory(String mood) {
+    moodHistory.add(mood);
+  }
+
+// returns the most recent mood the user entered
+  getLastMoodFromHistory() {
+    return moodHistory.last;
+  }
+
   Future<IbmData> readData(String sentence) async {
     var uname = 'apikey';
     var pword = 'cceOakkS6lzRHF4ukgmV0zuQn_eQZrgEPr_mwPnTJMWH';
@@ -29,7 +39,7 @@ class MoodDataProvider {
       headers: {'Authorization': authn},
     );
 
-    var ibmData;
+    IbmData ibmData;
 
     if (response.statusCode == 200) {
       var ibmDataInJson = json.decode(response.body);
@@ -40,6 +50,9 @@ class MoodDataProvider {
       print(response.statusCode);
       assert(response.statusCode == 200);
     }
+    // store mood history.
+    _storeMoodHistory(ibmData.documentTones.tones[0].toneId);
+
     return ibmData;
   }
 }

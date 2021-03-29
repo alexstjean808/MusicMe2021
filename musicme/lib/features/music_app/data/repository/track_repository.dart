@@ -15,4 +15,9 @@ class TrackRepository {
         await trackDataProvider.getTrackFromSentence(sentence);
     return track;
   }
+
+  Future<TrackData> getDataFromLastMood() async {
+    final TrackData track = await trackDataProvider.getTrackFromLastMood();
+    return track;
+  }
 }

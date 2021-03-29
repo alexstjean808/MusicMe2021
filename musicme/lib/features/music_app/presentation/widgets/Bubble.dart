@@ -3,9 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class Bubbles extends StatefulWidget {
+  final Color color;
+
+  const Bubbles({Key key, this.color}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return _BubblesState();
+    return _BubblesState(color: this.color);
   }
 }
 
@@ -13,8 +16,10 @@ class _BubblesState extends State<Bubbles> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   List<Bubble> bubbles;
   final int numberOfBubbles = 70;
-  final Color color = Colors.lightBlue;
+  final Color color;
   final double maxBubbleSize = 18.0;
+
+  _BubblesState({this.color});
 
   @override
   void initState() {

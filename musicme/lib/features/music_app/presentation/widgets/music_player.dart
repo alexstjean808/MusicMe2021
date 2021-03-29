@@ -44,7 +44,6 @@ class MusicPlayer extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          FeelingLuckyButton(),
         ],
       ),
     );
@@ -97,12 +96,11 @@ class FeelingLuckyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
-        primary: Colors.black,
+        primary: Colors.blue,
       ),
       child: Padding(
         padding: const EdgeInsets.all(11.0),
-        child: Icon(Icons.cake, color: Colors.white),
+        child: Text("Feeling lucky?"),
       ),
       onPressed: () {
         BlocProvider.of<TrackBloc>(context).add(FeelingLuckyEvent());
@@ -132,9 +130,9 @@ class ControlButtons extends StatelessWidget {
             padding: const EdgeInsets.all(11.0),
             child: Icon(Icons.fast_rewind, color: Colors.white),
           ),
-          onPressed: () {
-            SpotifySdk.skipPrevious();
-            sleep(Duration(milliseconds: 500));
+          onPressed: () async {
+            await SpotifySdk.skipPrevious();
+
             BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
           }, // PREVIOUS SONG BACK BUTTON
         ),
@@ -151,8 +149,8 @@ class ControlButtons extends StatelessWidget {
               size: 40,
             ),
           ),
-          onPressed: () {
-            SpotifySdk.resume();
+          onPressed: () async {
+            await SpotifySdk.resume();
           }, // RESUME BUTTON
         ),
         ElevatedButton(
@@ -181,9 +179,7 @@ class ControlButtons extends StatelessWidget {
             padding: const EdgeInsets.all(11.0),
             child: Icon(Icons.fast_forward, color: Colors.white),
           ),
-          onPressed: () {
-            SpotifySdk.skipNext();
-            sleep(Duration(milliseconds: 500));
+          onPressed: () async {
             BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
           }, // FAST FORWARD BUTTON
         ),
