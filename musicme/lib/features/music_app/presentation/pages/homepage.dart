@@ -57,15 +57,16 @@ class MusicMeHomePage extends StatelessWidget {
           body: Stack(
             children: [
               BlocBuilder<TrackBloc, TrackData>(builder: (context, trackData) {
-                if (trackData.mood == 'joy') {
-                  return Bubbles(color: Colors.yellow);
-                } else if (trackData.mood == 'sadness') {
-                  return Bubbles(color: Colors.deepPurple);
-                } else if (trackData.mood == 'anger') {
-                  return Bubbles(color: Colors.red);
-                } else {
-                  return Bubbles(color: Colors.green);
-                }
+                // print("Trying to change the bubble color");
+                // print(trackData.mood);
+                // if (trackData.mood == 'joy') {
+                //   return Bubbles(color: Colors.yellow);
+                // } else if (trackData.mood == 'sadness') {
+                //   return Bubbles(color: Colors.deepPurple);
+                // } else if (trackData.mood == 'anger') {
+                //   return Bubbles(color: Colors.red);
+                // } else {}
+                return Bubbles(color: Colors.yellow);
               }),
               Column(
                 children: [

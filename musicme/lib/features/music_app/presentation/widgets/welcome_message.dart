@@ -5,8 +5,9 @@ class WelcomeMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       child: Text(
-        "How's your day going?",
-        style: TextStyle(fontSize: 45, color: Colors.blue),
+        "How are you feeling?",
+        style: TextStyle(
+            fontSize: 35, color: Colors.blue, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
     );

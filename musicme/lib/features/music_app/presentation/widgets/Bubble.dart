@@ -8,18 +8,16 @@ class Bubbles extends StatefulWidget {
   const Bubbles({Key key, this.color}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return _BubblesState(color: this.color);
+    return _BubblesState();
   }
 }
 
 class _BubblesState extends State<Bubbles> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   List<Bubble> bubbles;
-  final int numberOfBubbles = 70;
-  final Color color;
+  final int numberOfBubbles = 120;
+  final Color color = Colors.green;
   final double maxBubbleSize = 18.0;
-
-  _BubblesState({this.color});
 
   @override
   void initState() {
@@ -59,24 +57,6 @@ class _BubblesState extends State<Bubbles> with SingleTickerProviderStateMixin {
               children: <Widget>[
                 SizedBox(
                   height: 200.0,
-                ),
-                Text(
-                  'MusicMe',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 40.0,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'IGEN 230',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 25.0,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
               ],
             )),

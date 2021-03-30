@@ -12,7 +12,7 @@ class MusicPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Color.fromRGBO(99, 60, 90, 50)),
+      decoration: BoxDecoration(color: Colors.blue),
       height: MediaQuery.of(context).size.height * 0.30,
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -30,7 +30,7 @@ class MusicPlayer extends StatelessWidget {
           ),
           LikeDislikeButtons(),
           Padding(
-            padding: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.all(10),
             child: BlocBuilder<TrackBloc, TrackData>(
               builder: (context, trackData) {
                 if (trackData.name == null || trackData.artist == null) {
@@ -57,32 +57,38 @@ class LikeDislikeButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            primary: Colors.black,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              primary: Colors.black,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(Icons.thumb_down, color: Colors.white),
+            ),
+            onPressed: () {}, // dislike button
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: Icon(Icons.thumb_down, color: Colors.white),
+          SizedBox(
+            width: 30,
           ),
-          onPressed: () {}, // dislike button
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            primary: Colors.black,
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              primary: Colors.black,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(Icons.thumb_up, color: Colors.white),
+            ),
+            onPressed: () {}, // Like buttons
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: Icon(Icons.thumb_up, color: Colors.white),
-          ),
-          onPressed: () {}, // Like buttons
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
