@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
@@ -12,39 +9,56 @@ class MusicPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Colors.blue),
-      height: MediaQuery.of(context).size.height * 0.30,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-          LikeDislikeButtons(),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: BlocBuilder<TrackBloc, TrackData>(
-              builder: (context, trackData) {
-                if (trackData.name == null || trackData.artist == null) {
-                  return Text("Song Name Loading...");
-                }
-                return Text("${trackData.name} by ${trackData.artist}");
-              },
+      color: Colors.blue,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.30,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
-          ),
-          ControlButtons(),
-          SizedBox(
-            height: 20,
-          ),
-        ],
+            LikeDislikeButtons(),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: BlocBuilder<TrackBloc, TrackData>(
+                  builder: (context, trackData) {
+                    if (trackData.name == null || trackData.artist == null) {
+                      return Text(
+                        "Loading...",
+                        style: TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
+                      );
+                    }
+                    return Text(
+                      "${trackData.name} by ${trackData.artist}",
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    );
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ControlButtons(),
+            SizedBox(
+              height: 60,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -74,7 +88,7 @@ class LikeDislikeButtons extends StatelessWidget {
             onPressed: () {}, // dislike button
           ),
           SizedBox(
-            width: 30,
+            width: 60,
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -85,7 +99,9 @@ class LikeDislikeButtons extends StatelessWidget {
               padding: const EdgeInsets.all(11.0),
               child: Icon(Icons.thumb_up, color: Colors.white),
             ),
-            onPressed: () {}, // Like buttons
+            onPressed: () {
+              BlocProvider.of<TrackBloc>(context).add(LikeEvent());
+            }, // Like buttons
           ),
         ],
       ),
@@ -110,6 +126,7 @@ class FeelingLuckyButton extends StatelessWidget {
       ),
       onPressed: () {
         BlocProvider.of<TrackBloc>(context).add(FeelingLuckyEvent());
+        Scaffold.of(context).showBottomSheet((context) => MusicPlayer());
       }, // PREVIOUS SONG BACK BUTTON
     );
   }
@@ -122,77 +139,76 @@ class ControlButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SizedBox(width: MediaQuery.of(context).size.width * 0.08),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            primary: Colors.black,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: Icon(Icons.fast_rewind, color: Colors.white),
-          ),
-          onPressed: () async {
-            await SpotifySdk.skipPrevious();
+    return Container(
+      width: 500,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              primary: Colors.black,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(Icons.fast_rewind, color: Colors.white),
+            ),
+            onPressed: () async {
+              await SpotifySdk.skipPrevious();
 
-            BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
-          }, // PREVIOUS SONG BACK BUTTON
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            primary: Colors.black,
+              BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
+            }, // PREVIOUS SONG BACK BUTTON
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: Icon(
-              Icons.play_arrow,
-              color: Colors.white,
-              size: 40,
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              primary: Colors.black,
             ),
-          ),
-          onPressed: () async {
-            await SpotifySdk.resume();
-          }, // RESUME BUTTON
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            primary: Colors.black,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: Icon(
-              Icons.pause,
-              color: Colors.white,
-              size: 40,
+            child: Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(
+                Icons.play_arrow,
+                color: Colors.white,
+                size: 40,
+              ),
             ),
+            onPressed: () async {
+              await SpotifySdk.resume();
+            }, // RESUME BUTTON
           ),
-          onPressed: () {
-            SpotifySdk.pause();
-          }, // PAUSE BUTTON
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            primary: Colors.black,
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              primary: Colors.black,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(
+                Icons.pause,
+                color: Colors.white,
+                size: 40,
+              ),
+            ),
+            onPressed: () {
+              SpotifySdk.pause();
+            }, // PAUSE BUTTON
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: Icon(Icons.fast_forward, color: Colors.white),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              primary: Colors.black,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(Icons.fast_forward, color: Colors.white),
+            ),
+            onPressed: () async {
+              BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
+            }, // FAST FORWARD BUTTON
           ),
-          onPressed: () async {
-            BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
-          }, // FAST FORWARD BUTTON
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.08,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

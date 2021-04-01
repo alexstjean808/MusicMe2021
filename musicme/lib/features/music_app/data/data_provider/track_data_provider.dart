@@ -141,7 +141,7 @@ class TrackDataProvider {
     // this function is defined in the global functions area of the project.
     List inter = [];
     int counter = 0;
-    // these three variables are attached to the TODO: below
+    // these three variables are attached to the
     var firstResponse;
     var songsFromFirstQuery;
     while (inter.length == 0) {

@@ -22,11 +22,14 @@ class _SearchBarState extends State<SearchBar> {
       width: MediaQuery.of(context).size.width * 0.75,
       child: TextField(
         onSubmitted: (String entry) {
-          _trackBloc.add(GetTrackEvent(sentence: entry));
+          entry = entry.trim();
+          if (entry != '') {
+            // if the user doesnt enter anything dont search.
+            _trackBloc.add(GetTrackEvent(sentence: entry));
 
-          Scaffold.of(context).showBottomSheet((context) => MusicPlayer());
-          _controller.clear();
-          // delay so the keyboard can disapear.
+            Scaffold.of(context).showBottomSheet((context) => MusicPlayer());
+            _controller.clear();
+          }
         },
         controller: _controller,
         decoration: InputDecoration(

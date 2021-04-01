@@ -1,14 +1,16 @@
 {
-  "liked_songs": [
+  "likedTracks": [
     {
       "trackId": "id1",
       "name": "thisSong1",
-      "artist": "Yeezy"
+      "artist": "Yeezy",
+      "mood": "sad"
     },
     {
       "trackId": "id2",
       "name": "thisSong2",
-      "artist": "TSwiftDaddy"
+      "artist": "TSwiftDaddy",
+      "mood": "happy"
     }
   ]
 }

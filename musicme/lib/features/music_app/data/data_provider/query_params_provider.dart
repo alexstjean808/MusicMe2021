@@ -141,8 +141,7 @@ class QueryParamsProvider {
     }
     var mapResponse = JsonDecoder().convert(res.body);
     print(res.body);
-    print(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${query}.json');
+
     var trackQueryParams = TrackQueryParams.fromJson(mapResponse);
 
     return trackQueryParams;

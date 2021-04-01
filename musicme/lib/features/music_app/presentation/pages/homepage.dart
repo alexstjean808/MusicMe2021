@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicme/features/music_app/core/methods/connect_to_spotify.dart';
+import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/track_data_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
@@ -12,6 +13,8 @@ import 'package:musicme/features/music_app/presentation/widgets/music_player.dar
 import 'package:musicme/features/music_app/presentation/widgets/search_bar.dart';
 import 'package:musicme/features/music_app/presentation/widgets/welcome_message.dart';
 
+import 'liked_songs_page.dart';
+
 class MusicMeHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,13 +22,26 @@ class MusicMeHomePage extends StatelessWidget {
     return MaterialApp(
       home: BlocProvider(
         create: (context) => TrackBloc(
-          TrackData(mood: 'joy', trackId: '7GhIk7Il098yCjg4BQjzvb'),
-          TrackRepository(TrackDataProvider()),
-        ),
+            TrackData(mood: 'joy', trackId: '7GhIk7Il098yCjg4BQjzvb'),
+            TrackRepository(TrackDataProvider()),
+            LikedSongsProvider()),
         child: Scaffold(
+          drawer: LikedSongsSideMenu(),
           appBar: AppBar(
             leadingWidth: 150,
             actions: [
+              Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => GenrePage()));
+                  },
+                  child: Text("Filter by Genre"),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
               Builder(
                 builder: (context) => ElevatedButton(
                     onPressed: () {
@@ -34,7 +50,10 @@ class MusicMeHomePage extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => CountryPage()));
                     },
-                    child: Text('Countries')),
+                    child: Text('Discover Countries')),
+              ),
+              SizedBox(
+                width: 10,
               ),
               ElevatedButton(
                 onPressed: () {
@@ -42,14 +61,16 @@ class MusicMeHomePage extends StatelessWidget {
                 },
                 child: Text("Connect To Spotify"),
               ),
+              SizedBox(
+                width: 10,
+              ),
             ],
             leading: Builder(
               builder: (context) => ElevatedButton(
+                child: Text("Liked Songs"),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => GenrePage()));
+                  Scaffold.of(context).openDrawer();
                 },
-                child: Text("Search by Genre"),
               ),
             ),
           ),

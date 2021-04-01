@@ -75,7 +75,7 @@ class CountryPage extends StatelessWidget {
     ['assets/images/Georgia.png', 'assets/images/Germany.png'],
     ['assets/images/Ghana.png', 'assets/images/Greece.png'],
     ['assets/images/Guatemala.png', 'assets/images/Haiti.png'],
-    ['assets/images/Hong Kong.png', 'assets/images/Hungary.png'],
+    ['assets/images/HongKong.png', 'assets/images/Hungary.png'],
     ['assets/images/Iceland.png', 'assets/images/India.png'],
     ['assets/images/Indonesia.png', 'assets/images/Ireland.png'],
     ['assets/images/Israel.png', 'assets/images/Italy.png'],
@@ -85,8 +85,8 @@ class CountryPage extends StatelessWidget {
     ['assets/images/Mexico.png', 'assets/images/Moldova.png'],
     ['assets/images/Mongolia.png', 'assets/images/Morocco.png'],
     ['assets/images/Nepal.png', 'assets/images/Netherlands.png'],
-    ['assets/images/New Zealand.png', 'assets/images/Nigeria.png'],
-    ['assets/images/Northern Ireland.png', 'assets/images/North Macedonia.png'],
+    ['assets/images/NewZealand.png', 'assets/images/Nigeria.png'],
+    ['assets/images/Northern Ireland.png', 'assets/images/NorthMacedonia.png'],
     ['assets/images/Norway.png', 'assets/images/Pakistan.png'],
     ['assets/images/Peru.png', 'assets/images/Philippines.png'],
     ['assets/images/Poland.png', 'assets/images/Portugal.png'],
@@ -94,7 +94,7 @@ class CountryPage extends StatelessWidget {
     ['assets/images/Scotland.png', 'assets/images/Serbia.png'],
     ['assets/images/Singapore.png', 'assets/images/Slovakia.png'],
     ['assets/images/Slovenia.png', 'assets/images/South Africa.png'],
-    ['assets/images/South Korea.png', 'assets/images/Spain.png'],
+    ['assets/images/SouthKorea.png', 'assets/images/Spain.png'],
     ['assets/images/Sweden.png', 'assets/images/Switzerland.png'],
     ['assets/images/Taiwan.png', 'assets/images/Thailand.png'],
     ['assets/images/Tunisia.png', 'assets/images/Turkey.png'],
@@ -107,7 +107,8 @@ class CountryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CountryBloc([], QueryParamsProvider()),
+      create: (context) =>
+          CountryBloc([], QueryParamsProvider())..add(LoadCountryEvent()),
       child: Scaffold(
         appBar: AppBar(
           leading: ElevatedButton(
@@ -120,7 +121,6 @@ class CountryPage extends StatelessWidget {
           child: ListView.builder(
             itemCount: _countrys.length,
             itemBuilder: (BuildContext context, int index) {
-              BlocProvider.of<CountryBloc>(context).add(LoadCountryEvent());
               return CountryRow(
                 imageAssets: _imageAssets[index],
                 tileSpacing: 0,

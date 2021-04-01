@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
@@ -34,7 +32,8 @@ class GenrePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GenreBloc([], QueryParamsProvider()),
+      create: (context) =>
+          GenreBloc([], QueryParamsProvider())..add(LoadGenreEvent()),
       child: Scaffold(
         appBar: AppBar(
           leading: ElevatedButton(
@@ -47,7 +46,6 @@ class GenrePage extends StatelessWidget {
           child: ListView.builder(
             itemCount: _genres.length,
             itemBuilder: (BuildContext context, int index) {
-              BlocProvider.of<GenreBloc>(context).add(LoadGenreEvent());
               return GenreRow(
                 imageAssets: _imageAssets[index],
                 tileSpacing: 0,

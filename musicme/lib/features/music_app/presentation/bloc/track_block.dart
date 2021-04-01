@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:musicme/features/music_app/core/methods/get_player_state.dart';
+import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_event.dart';
@@ -9,6 +10,7 @@ import 'package:spotify_sdk/spotify_sdk.dart';
 
 class TrackBloc extends Bloc<TrackEvent, TrackData> {
   final TrackRepository repository;
+  final LikedSongsProvider likedSongProvider;
 
   _playSpotifyTrack(TrackData trackData) async {
     print("trying to play the track: Bloc listener is responding to input");
@@ -36,7 +38,25 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
     return trackData;
   }
 
-  TrackBloc(TrackData initialState, this.repository) : super(initialState);
+  Future<TrackData> _getCurrentTrack() async {
+    Track newTrackData = await getPlayerState();
+    String trackId = newTrackData.uri;
+    print("Before split $trackId");
+    // splitting uri so we can extract the song id
+    var array = trackId.split(':');
+    print("Array split $array");
+    trackId = array.last;
+    print("After split $trackId");
+    var currentTrack = TrackData(
+        mood: '',
+        trackId: trackId,
+        artist: newTrackData.artist.name,
+        name: newTrackData.name);
+    return currentTrack;
+  }
+
+  TrackBloc(TrackData initialState, this.repository, this.likedSongProvider)
+      : super(initialState);
   @override
   Stream<TrackData> mapEventToState(TrackEvent event) async* {
     if (event is GetTrackEvent) {
@@ -65,14 +85,17 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
       // updating the trackData for name and artist
       yield trackData;
     } else if (event is LikeEvent) {
-      //add song + artist to the user library
-      //add liked song to liked songs list in
-      //liked song stores in JSON
-      // {id: '1234124', name:'dfgsdf', artist: 'Taylor Swift'}
+      // getting the current track from player state.
+      TrackData currentSong = await _getCurrentTrack();
+      await likedSongProvider.addLikedSong(currentSong);
     } else if (event is DislikeEvent) {
       //Read track parameters from JSON
       //function that changese the parameters for whatever mood range was disliked
       //update the track params json
+    } else if (event is PlayLikedSongEvent) {
+      TrackData likedSong = event.song;
+      await _playSpotifyTrack(likedSong);
+      yield likedSong;
     }
   }
 }
