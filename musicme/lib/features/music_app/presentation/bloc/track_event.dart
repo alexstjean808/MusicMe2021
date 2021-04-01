@@ -18,6 +18,11 @@ class SkipTrackEvent extends TrackEvent {
   List<Object> get props => [];
 }
 
+class SkipPreviousEvent extends TrackEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class FeelingLuckyEvent extends TrackEvent {
   @override
   List<Object> get props => [];

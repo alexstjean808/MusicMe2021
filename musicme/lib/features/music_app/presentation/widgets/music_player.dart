@@ -35,16 +35,22 @@ class MusicPlayer extends StatelessWidget {
                 child: BlocBuilder<TrackBloc, TrackData>(
                   builder: (context, trackData) {
                     if (trackData.name == null || trackData.artist == null) {
-                      return Text(
-                        "Loading...",
-                        style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
+                      return SizedBox(
+                        height: 35,
+                        child: Text(
+                          "Loading...",
+                          style: TextStyle(fontSize: 20),
+                          textAlign: TextAlign.center,
+                        ),
                       );
                     }
-                    return Text(
-                      "${trackData.name} by ${trackData.artist}",
-                      style: TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
+                    return SizedBox(
+                      height: 35,
+                      child: Text(
+                        "${trackData.name} by ${trackData.artist}",
+                        style: TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
                     );
                   },
                 ),
@@ -155,9 +161,7 @@ class ControlButtons extends StatelessWidget {
               child: Icon(Icons.fast_rewind, color: Colors.white),
             ),
             onPressed: () async {
-              await SpotifySdk.skipPrevious();
-
-              BlocProvider.of<TrackBloc>(context).add(SkipTrackEvent());
+              BlocProvider.of<TrackBloc>(context).add(SkipPreviousEvent());
             }, // PREVIOUS SONG BACK BUTTON
           ),
           ElevatedButton(

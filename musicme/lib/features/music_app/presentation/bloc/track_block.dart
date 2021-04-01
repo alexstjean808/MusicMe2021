@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:musicme/features/music_app/core/methods/get_player_state.dart';
 import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
+import 'package:musicme/features/music_app/data/data_provider/song_history_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_event.dart';
@@ -11,6 +12,7 @@ import 'package:spotify_sdk/spotify_sdk.dart';
 class TrackBloc extends Bloc<TrackEvent, TrackData> {
   final TrackRepository repository;
   final LikedSongsProvider likedSongProvider;
+  final SongHistoryProvider songHistoryProvider;
 
   _playSpotifyTrack(TrackData trackData) async {
     print("trying to play the track: Bloc listener is responding to input");
@@ -23,6 +25,8 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
           spotifyUri: "spotify:track:${trackId}", asRadio: true);
 
       print('trying to play spotify song spotify:track:$trackId');
+      print('Adding to history');
+      songHistoryProvider.addToHistory(trackData);
     } catch (err) {
       print("Failed with spotify error: $err");
     }
@@ -55,7 +59,8 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
     return currentTrack;
   }
 
-  TrackBloc(TrackData initialState, this.repository, this.likedSongProvider)
+  TrackBloc(TrackData initialState, this.repository, this.likedSongProvider,
+      this.songHistoryProvider)
       : super(initialState);
   @override
   Stream<TrackData> mapEventToState(TrackEvent event) async* {
@@ -78,6 +83,12 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
       await _playSpotifyTrack(trackData);
       trackData = await _updateTrackData(trackData);
       yield trackData;
+    } else if (event is SkipPreviousEvent) {
+      // get the last track from history
+      TrackData lastSong = songHistoryProvider.getLastTrack();
+      await _playSpotifyTrack(lastSong);
+      lastSong = await _updateTrackData(lastSong);
+      yield lastSong;
     } else if (event is FeelingLuckyEvent) {
       TrackData trackData = await repository.getFeelingLuckyTrack();
       await _playSpotifyTrack(trackData);
