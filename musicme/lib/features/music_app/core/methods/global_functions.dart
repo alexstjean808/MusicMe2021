@@ -65,7 +65,7 @@ List<Map> convertTrackDataToMapRemove(
   Map trackMap = {};
   List<Map> trackMapList = [];
   TrackData track;
-  List songIds = [];
+
   Map trackToRemove = {
     "id": removedTrack.trackId,
     "name": removedTrack.name,
@@ -82,11 +82,12 @@ List<Map> convertTrackDataToMapRemove(
       "mood": track.mood
     };
 
-    songIds.add(track.trackId);
-    // only add trackMaps to the list when the name is not the same as the removedTrack
-    if (!(songIds.contains(trackToRemove["id"]))) {
-      trackMapList.add(trackMap);
+    print('trackId is ${track.trackId}');
+    if (trackToRemove["id"] == track.trackId) {
+      print('not adding this track');
+      continue;
     }
+    trackMapList.add(trackMap);
   }
   return trackMapList;
 }
