@@ -26,7 +26,7 @@ String filterToQueryGenre(List userGenreInput) {
 
 // converts the List of TrackData objects into a list of Map objects so that json_encoder() works
 // to send the information to the database
-List<Map> convertTrackDataToMap(
+List<Map> convertTrackDataToMapAndAdd(
     List<TrackData> trackList, TrackData addedTrack) {
   var listLength = trackList.length;
   Map trackMap = {};
@@ -42,7 +42,7 @@ List<Map> convertTrackDataToMap(
       "mood": track.mood
     };
 
-    songIds.add(track.name);
+    songIds.add(track.trackId);
     trackMapList.add(trackMap);
   }
   Map trackToAdd = {
@@ -51,7 +51,7 @@ List<Map> convertTrackDataToMap(
     "artist": addedTrack.artist,
     "mood": addedTrack.mood
   };
-  // only adds trackMaps to the list when they don't have the same id
+
   if (!(songIds.contains(trackToAdd["id"]))) {
     trackMapList.add(trackToAdd);
   }
@@ -82,9 +82,8 @@ List<Map> convertTrackDataToMapRemove(
       "mood": track.mood
     };
 
-    print('trackId is ${track.trackId}');
     if (trackToRemove["id"] == track.trackId) {
-      print('not adding this track');
+      // wont add the track we want to remove.
       continue;
     }
     trackMapList.add(trackMap);

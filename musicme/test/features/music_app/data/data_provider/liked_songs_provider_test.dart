@@ -18,14 +18,14 @@ void main() {
     TrackData song = TrackData(
         name: "billy",
         artist: "tom",
-        trackId: "moreInfo5",
+        trackId: "1psvnQxSDdIKTDM2Jm8QKt",
         mood: "still stoked");
     // ACT
     await likedSongsProvider.addLikedSong(song, 'musicme');
 
     List<TrackData> songData = await likedSongsProvider.readLikedTracks();
     // ASSERT
-    expect(songData[songData.length - 1].artist, 'tom');
+    expect(songData[songData.length - 1].trackId, '0hvxqftYCZT406ElE03giM');
   });
 
   test('Liked song successfully removed from database', () async {

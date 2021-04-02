@@ -3,7 +3,6 @@ import 'package:musicme/features/music_app/data/data_provider/liked_songs_provid
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/presentation/bloc/liked_songs_event.dart';
 import './liked_songs_state.dart';
-import 'genre_event.dart';
 
 class LikedSongsBloc extends Bloc<LikedSongEvent, LikedSongsState> {
   final LikedSongsProvider likedSongsProvider;

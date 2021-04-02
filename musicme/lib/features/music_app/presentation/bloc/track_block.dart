@@ -35,10 +35,15 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
   Future<TrackData> _updateTrackData(TrackData trackData) async {
     // gets the current player state and updates track Data with the artist name and the song name
     // returns the TrackData updated with artist name and songs name
-    Track newTrackData =
-        await getPlayerState(); // gets the updated track object
-    trackData.artist = newTrackData.artist.name;
-    trackData.name = newTrackData.name;
+    trackData =
+        await Future.delayed(const Duration(milliseconds: 500), () async {
+      Track newTrackData =
+          await getPlayerState(); // gets the updated track object
+      trackData.artist = newTrackData.artist.name;
+      trackData.name = newTrackData.name;
+      print("Got updated Player state");
+      return trackData;
+    });
     return trackData;
   }
 

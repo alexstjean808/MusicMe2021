@@ -28,41 +28,29 @@ class MusicPlayer extends StatelessWidget {
               ],
             ),
             LikeDislikeButtons(),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: BlocBuilder<TrackBloc, TrackData>(
-                  builder: (context, trackData) {
-                    if (trackData.name == null || trackData.artist == null) {
-                      return SizedBox(
-                        height: 35,
-                        child: Text(
-                          "Loading...",
-                          style: TextStyle(fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-                    return SizedBox(
-                      height: 35,
-                      child: Text(
-                        "${trackData.name} by ${trackData.artist}",
-                        style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
-                      ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: BlocBuilder<TrackBloc, TrackData>(
+                builder: (context, trackData) {
+                  if (trackData.name == null || trackData.artist == null) {
+                    return Text(
+                      "Loading...",
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
                     );
-                  },
-                ),
+                  }
+                  return Text(
+                    "${trackData.name} by ${trackData.artist}",
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  );
+                },
               ),
             ),
             SizedBox(
               height: 10,
             ),
             ControlButtons(),
-            SizedBox(
-              height: 60,
-            ),
           ],
         ),
       ),

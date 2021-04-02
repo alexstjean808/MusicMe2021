@@ -69,7 +69,7 @@ class LikedSongsSideMenu extends StatelessWidget {
               ),
               Container(
                 color: Color.fromRGBO(212, 235, 242, 255),
-                height: 500,
+                height: (MediaQuery.of(context).size.height - 240),
                 child: BlocBuilder<LikedSongsBloc, LikedSongsState>(
                   builder: (context, state) {
                     return ListView.builder(
@@ -78,10 +78,25 @@ class LikedSongsSideMenu extends StatelessWidget {
                         var name = state.likedSongs[index].name;
                         var trackid = state.likedSongs[index].trackId;
                         var artist = state.likedSongs[index].artist;
+
                         if (state.canEdit) {
+                          // if the string length is greater than 25 then limit the name and artist
+                          name = name.length > 26
+                              ? name.substring(0, 26).trim() + '...'
+                              : name;
+                          artist = artist.length > 24
+                              ? artist.substring(0, 24).trim() + '...'
+                              : artist;
                           return LikeSongTileEdit(
                               name: name, trackId: trackid, artist: artist);
                         } else {
+                          // if the string length is greater than 30 then limit the name and artist
+                          name = name.length > 31
+                              ? name.substring(0, 31).trim() + '...'
+                              : name;
+                          artist = artist.length > 29
+                              ? artist.substring(0, 29).trim() + '...'
+                              : artist;
                           return LikeSongTile(
                               name: name, trackId: trackid, artist: artist);
                         }
@@ -116,29 +131,33 @@ class LikeSongTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Text(
-                    "$name",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Text(
+                      "$name",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  SizedBox(width: 20),
-                  Text("By $artist", style: TextStyle(color: Colors.white)),
-                ],
-              ),
-              SizedBox(height: 10),
-            ],
+                  ],
+                ),
+                Row(
+                  children: [
+                    SizedBox(width: 20),
+                    Text("By $artist", style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
           ),
           Container(
             padding: EdgeInsets.only(right: 10),

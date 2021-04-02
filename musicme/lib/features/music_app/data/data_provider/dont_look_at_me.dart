@@ -107,7 +107,7 @@ Map genresFromArray = {
   'Slovakia': countrySlovakia,
   'Slovenia': countrySlovenia,
   'South Africa': countrySAfrica,
-  'Ssouth Korea': countrySKorea,
+  'South Korea': countrySKorea,
   'Spain': countrySpain,
   'Sweden': countrySweden,
   'Swiss': countrySwiss,

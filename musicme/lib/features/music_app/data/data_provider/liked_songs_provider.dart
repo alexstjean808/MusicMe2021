@@ -59,7 +59,8 @@ class LikedSongsProvider {
     List<TrackData> likedTracksList = await readLikedTracks("musicme");
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
-    List<Map> likedMapList = convertTrackDataToMap(likedTracksList, likedSong);
+    List<Map> likedMapList =
+        convertTrackDataToMapAndAdd(likedTracksList, likedSong);
     // writing the appended file.
     var jsonString = JsonEncoder().convert(likedMapList);
     print(jsonString);
