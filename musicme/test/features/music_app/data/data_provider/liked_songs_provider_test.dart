@@ -45,6 +45,5 @@ void main() {
   });
 }
 
-
 // in database
 //  [{"artist":"Kid Quill","id":"0QXbKnplTUrae3P1P7xdq2","mood":"","name":"Playlist"},{"artist":"Freddie Gibbs","id":"4wmZtoif8SGm7PDqgKrEXr","mood":"","name":"4 Thangs (feat. Big Sean & Hit-Boy)"},{"artist":"Freestyle","id":"6F4Scj944RJCZPgcGuAqym","mood":"","name":"So Slow"}]
