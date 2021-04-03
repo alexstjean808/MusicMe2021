@@ -10,7 +10,9 @@ void main() {
     var trackId = await trackDataProvider
         .getTrackFromSentence("sad sad sad sad sad sad sad sad sad sad");
     // ACT
-    print("${trackId.name} + ${trackId.trackId} + ${trackId.artist}");
+    print(
+        "${trackId.name} + ${trackId.trackId} + ${trackId.artist} + ${trackId.mood}");
+    //trackID name and artist are not printing
     //ASSERT
     expect(trackId.runtimeType, TrackData);
   });
