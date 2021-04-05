@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
 import 'dart:convert';
 
+import 'package:musicme/features/music_app/data/entities/user.dart';
+
 // this is a class that will interact track_mood_ranges.json
 // It will contain methods that update the paramters based on some logic that needs to be determined
 //
@@ -23,10 +25,17 @@ class QueryParamsProvider {
   // input string of a genre the user want to query with
   // content: opens track_query_params.json and appends the file
   // returns: nothing.
-  addUserGenres(String genreInput, [var user = 'musicme']) async {
-    String query = user;
+  addUserGenres(String genreInput, [User user]) async {
+    String email;
+    //makes default value musicme
+    if (user == null) {
+      email = "musicme";
+    } else {
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
+
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${query}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -41,7 +50,7 @@ class QueryParamsProvider {
       var jsonString = JsonEncoder().convert(jsonObject);
 
       res = await http.put(
-          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$query.json',
+          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json',
           body: jsonString);
     }
   }
@@ -50,10 +59,16 @@ class QueryParamsProvider {
   // input string of a genre the user want to not query with
   // content: opens track_query_params.json and appends the file
   // returns: nothing.
-  removeUserGenres(String genreInput, [String user = 'musicme']) async {
-    String query = user;
+  removeUserGenres(String genreInput, [User user]) async {
+    //makes default value musicme
+    String email;
+    if (user == null) {
+      email = "musicme";
+    } else {
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${query}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -68,7 +83,7 @@ class QueryParamsProvider {
       var jsonString = JsonEncoder().convert(jsonObject);
 
       res = await http.put(
-          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$query.json',
+          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json',
           body: jsonString);
     }
   }
@@ -76,9 +91,16 @@ class QueryParamsProvider {
 /////////////////////////////////////////////////////////////////////////////////////////////////////END USER GENRE
 
 ////////////////////////////////////////////////////////////////////TESTING COUNTRY
-  addUserCountries(String countryInput, [var user = 'musicme']) async {
+  addUserCountries(String countryInput, [User user]) async {
+    //makes default value musicme
+    String email;
+    if (user == null) {
+      email = "musicme";
+    } else {
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${user}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -93,7 +115,7 @@ class QueryParamsProvider {
       var jsonString = JsonEncoder().convert(jsonObject);
 
       res = await http.put(
-          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$user.json',
+          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json',
           body: jsonString);
     }
   }
@@ -102,9 +124,16 @@ class QueryParamsProvider {
   // input string of a genre the user want to not query with
   // content: opens track_query_params.json and appends the file
   // returns: nothing.
-  removeUserCountries(String countryInput, [String user = 'musicme']) async {
+  removeUserCountries(String countryInput, [User user]) async {
+    //makes default value musicme
+    String email;
+    if (user == null) {
+      email = "musicme";
+    } else {
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${user}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -119,12 +148,19 @@ class QueryParamsProvider {
       var jsonString = JsonEncoder().convert(jsonObject);
 
       res = await http.put(
-          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$user.json',
+          'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json',
           body: jsonString);
     }
   }
 
-  initializeNewUser(String user) async {
+  initializeNewUser([User user]) async {
+    //makes default value musicme
+    String email;
+    if (user == null) {
+      email = "musicme";
+    } else {
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
     var initialQueryMap = {
       "track_mood_ranges": {
         "anger_params": {
@@ -151,7 +187,7 @@ class QueryParamsProvider {
     var jsonString = JsonEncoder().convert(initialQueryMap);
 
     var res = await http.put(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$user.json',
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json',
         body: jsonString);
   }
 
@@ -163,10 +199,16 @@ class QueryParamsProvider {
   // CONTENT: take info from track_query_params.json
   // OUTPUT: A Track Mood Ranges object that we can use in the track_data_provider.dart
   // in order to query the correct track.
-  Future<TrackQueryParams> readParams(String user) async {
-    String query = user;
+  Future<TrackQueryParams> readParams([User user]) async {
+    //makes default value musicme
+    String email;
+    if (user == null) {
+      email = "musicme";
+    } else {
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${query}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$email.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }

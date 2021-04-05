@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:musicme/features/music_app/core/methods/global_functions.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:http/http.dart' as http;
+import 'package:musicme/features/music_app/data/entities/user.dart';
 
 class LikedSongsProvider {
   // When the user removes a song this method will be called to remove that song
@@ -13,8 +14,21 @@ class LikedSongsProvider {
   // OUTPUT: nothing
   // The liked Song should always already be in the list of songs but we should have a check to make sure it is there.
   // this function will most likely call on the readData function to see what is already there.
-  removeLikedSong(TrackData likedSong, String user) async {
-    List<TrackData> likedTracksList = await readLikedTracks("musicme");
+  removeLikedSong(TrackData likedSong, [User user]) async {
+    String email;
+    var musicme;
+    //makes default value musicme
+    if (user == null) {
+      musicme = User(
+          email: "musicme@musicmetesting.com",
+          displayName: "Refactoring kinda sucks");
+      email = "musicme";
+    } else {
+      musicme = user;
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
+
+    List<TrackData> likedTracksList = await readLikedTracks(musicme);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
     List<Map> likedMapList =
@@ -23,7 +37,7 @@ class LikedSongsProvider {
     var jsonString = JsonEncoder().convert(likedMapList);
     print(jsonString);
     await http.put(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/$user/likedTracks.json',
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/$email/likedTracks.json',
         body: jsonString);
   }
 
@@ -32,10 +46,17 @@ class LikedSongsProvider {
   // INPUT: nothing
   // CONTENT: take info from liked_songs.json
   // OUTPUT: A list of TrackData objects to display on the User interface
-  Future<List<TrackData>> readLikedTracks([String user = 'musicme']) async {
-    String query = user;
+  Future<List<TrackData>> readLikedTracks([User user]) async {
+    String email;
+    //makes default value musicme
+    if (user == null) {
+      email = "musicme";
+    } else {
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
+
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/${query}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/$email.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -55,8 +76,20 @@ class LikedSongsProvider {
 // CONTENT: Adds the songs to the List(or Touple) in the liked_songs.json
 // OUTPUT: nothing
 // this function will most likely call on the readData function to see what is already there.
-  addLikedSong(TrackData likedSong, [String user = 'musicme']) async {
-    List<TrackData> likedTracksList = await readLikedTracks("musicme");
+  addLikedSong(TrackData likedSong, [User user]) async {
+    String email;
+    var musicme;
+    //makes default value musicme
+    if (user == null) {
+      musicme = User(
+          email: "musicme@musicmetesting.com",
+          displayName: "Refactoring kinda sucks");
+      email = "musicme";
+    } else {
+      musicme = user;
+      email = user.email.substring(0, user.email.indexOf('@'));
+    }
+    List<TrackData> likedTracksList = await readLikedTracks(musicme);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
     List<Map> likedMapList =
@@ -65,7 +98,7 @@ class LikedSongsProvider {
     var jsonString = JsonEncoder().convert(likedMapList);
     print(jsonString);
     await http.put(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/$user/likedTracks.json',
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/$email/likedTracks.json',
         body: jsonString);
   }
 }

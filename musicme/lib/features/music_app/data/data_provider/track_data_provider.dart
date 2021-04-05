@@ -4,6 +4,7 @@ import 'package:musicme/features/music_app/core/methods/global_functions.dart';
 import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
+import 'package:musicme/features/music_app/data/entities/user.dart';
 import 'dart:async';
 import 'dart:math';
 import 'mood_data_provider.dart';
@@ -104,7 +105,17 @@ class TrackDataProvider {
   }
 
 // this gets a track from the database!
-  Future<TrackData> getTrackFromSentence(String sentence) async {
+  Future<TrackData> getTrackFromSentence(String sentence, [User user]) async {
+    //makes default value musicme
+    //makes default value musicme
+    User queryUser;
+    if (user == null) {
+      queryUser = User(
+          displayName: "Generic Name", email: "musicme@musicmetesting.com");
+    } else {
+      queryUser = user;
+    }
+
     // all possible moods
     var moods = ['joy', 'anger', 'sadness'];
     // this gets the mood from the IBM tone analyser
@@ -123,7 +134,7 @@ class TrackDataProvider {
           _getRandomMood(); // if the mood doesnt exist then this function will return a random mood to work with.
     }
     // Reading the data from track_query_params
-    var trackQueryParams = await QueryParamsProvider().readParams('musicme');
+    var trackQueryParams = await QueryParamsProvider().readParams(queryUser);
     // now we will get all the ranges for whatever mood we got from IBM
     Ranges ranges = _selectParamRangeFromMood(trackQueryParams, mood);
 
@@ -190,7 +201,7 @@ class TrackDataProvider {
           convert.jsonDecode(response.body); //convert http response to JSON
 
       // save the first response from the database in case we overfilter the mood
-      print('While Loop Count: ${counter}');
+      print('While Loop Count: $counter');
       if (counter == 1) {
         firstResponse = returnJSON;
         songsFromFirstQuery = extractTrackIDs(firstResponse);
@@ -248,18 +259,27 @@ class TrackDataProvider {
     return track;
   }
 
-  Future<TrackData> getTrackFromLastMood() async {
+  Future<TrackData> getTrackFromLastMood(User user) async {
+    //makes default value musicme
+    User queryUser;
+    if (user == null) {
+      queryUser = User(
+          displayName: "Generic Name", email: "musicme@musicmetesting.com");
+    } else {
+      queryUser = user;
+    }
+
     // this gets the mood from the IBM tone analyser
     var moodDataProvider = MoodDataProvider();
     // ibmData now has a mood string in it.
-    ;
+
     // here we are getting the document tone mood
     var mood = moodDataProvider.getLastMoodFromHistory();
     // logging mood to console.
     print(mood);
 
     // Reading the data from track_query_params
-    var trackQueryParams = await QueryParamsProvider().readParams('musicme');
+    var trackQueryParams = await QueryParamsProvider().readParams(queryUser);
     // now we will get all the ranges for whatever mood we got from IBM
     Ranges ranges = _selectParamRangeFromMood(trackQueryParams, mood);
 

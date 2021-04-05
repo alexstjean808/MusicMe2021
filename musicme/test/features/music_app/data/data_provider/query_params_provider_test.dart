@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
+import 'package:musicme/features/music_app/data/entities/user.dart';
 
 void main() {
   // IMPORTANT: for testing these files make sure track_query_params.json has "genres": ["Rock", "Jazz", "Pop"]
@@ -9,7 +10,7 @@ void main() {
     // ARRANGE
     var queryParamProvider = QueryParamsProvider();
     // ACT
-    var trackQueryParams = await queryParamProvider.readParams("musicme");
+    var trackQueryParams = await queryParamProvider.readParams();
 
     // ASSERT
     expect(trackQueryParams.runtimeType, TrackQueryParams);
@@ -18,8 +19,7 @@ void main() {
     // ARRANGE
     var queryParamProvider = QueryParamsProvider();
     // ACT
-    TrackQueryParams trackQueryParams =
-        await queryParamProvider.readParams("musicme");
+    TrackQueryParams trackQueryParams = await queryParamProvider.readParams();
 
     // ASSERT
 
@@ -137,14 +137,17 @@ void main() {
   test('Initializes new user query parameters', () async {
     // ARRANGE
     var testQueryParam = QueryParamsProvider();
+    var testUser =
+        User(email: "thisisatest@testing.com", displayName: "MyDisplayName");
+
     // reading the current file (this is dependedt on file reading working)
     // this checks to see
-    await testQueryParam.initializeNewUser("pleasework");
+    await testQueryParam.initializeNewUser(testUser);
 
     // ACT
     // adding Pop to the list
 
-    TrackQueryParams output = await testQueryParam.readParams("pleasework");
+    TrackQueryParams output = await testQueryParam.readParams("thisisatest");
     // ASSERT
     // output should be first list read + string that was added
     // in this case [..., 'Pop']
