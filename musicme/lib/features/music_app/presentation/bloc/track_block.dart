@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:musicme/features/music_app/core/methods/get_player_state.dart';
+import 'package:musicme/features/music_app/data/data_provider/input_log_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/song_history_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
+import 'package:musicme/features/music_app/data/local_data/user_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_event.dart';
 
@@ -13,6 +15,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
   final TrackRepository repository;
   final LikedSongsProvider likedSongProvider;
   final SongHistoryProvider songHistoryProvider;
+  final InputLogProvider inputLogProvider;
 
   _playSpotifyTrack(TrackData trackData) async {
     print("trying to play the track: Bloc listener is responding to input");
@@ -36,7 +39,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
     // gets the current player state and updates track Data with the artist name and the song name
     // returns the TrackData updated with artist name and songs name
     trackData =
-        await Future.delayed(const Duration(milliseconds: 500), () async {
+        await Future.delayed(const Duration(milliseconds: 100), () async {
       Track newTrackData =
           await getPlayerState(); // gets the updated track object
       trackData.artist = newTrackData.artist.name;
@@ -65,7 +68,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
   }
 
   TrackBloc(TrackData initialState, this.repository, this.likedSongProvider,
-      this.songHistoryProvider)
+      this.songHistoryProvider, this.inputLogProvider)
       : super(initialState);
   @override
   Stream<TrackData> mapEventToState(TrackEvent event) async* {
@@ -74,7 +77,8 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
         TrackData trackData =
             await repository.getAllDataThatMeetsRequirements(event.sentence);
         await _playSpotifyTrack(trackData);
-
+        // logging whatever the user says
+        await inputLogProvider.updateLogData(event.sentence, userGLOBAL);
         trackData = await _updateTrackData(trackData);
         // updating the trackData for name and artist
 
@@ -84,7 +88,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
         // play a really funky song on failure.
       }
     } else if (event is SkipTrackEvent) {
-      TrackData trackData = await repository.getDataFromLastMood();
+      TrackData trackData = await repository.getDataFromLastMood(userGLOBAL);
       await _playSpotifyTrack(trackData);
       trackData = await _updateTrackData(trackData);
       yield trackData;
@@ -95,7 +99,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
       lastSong = await _updateTrackData(lastSong);
       yield lastSong;
     } else if (event is FeelingLuckyEvent) {
-      TrackData trackData = await repository.getFeelingLuckyTrack();
+      TrackData trackData = await repository.getFeelingLuckyTrack(userGLOBAL);
       await _playSpotifyTrack(trackData);
       trackData = await _updateTrackData(trackData);
       // updating the trackData for name and artist
@@ -103,7 +107,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
     } else if (event is LikeEvent) {
       // getting the current track from player state.
       TrackData currentSong = await _getCurrentTrack();
-      await likedSongProvider.addLikedSong(currentSong);
+      await likedSongProvider.addLikedSong(currentSong, userGLOBAL);
     } else if (event is DislikeEvent) {
       //Read track parameters from JSON
       //function that changese the parameters for whatever mood range was disliked

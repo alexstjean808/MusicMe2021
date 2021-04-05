@@ -4,6 +4,7 @@
 import '../local_data/song_history.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 
+// GLOBAL VARIABE CALLED SONG HISTOY
 class SongHistoryProvider {
   // INPUT: a song that must be added to the history
   // content: adds the song to the history at song_history.dart

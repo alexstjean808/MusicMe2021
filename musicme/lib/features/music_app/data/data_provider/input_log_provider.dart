@@ -3,14 +3,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:musicme/features/music_app/data/entities/user.dart';
 
 class InputLogProvider {
   // INPUt: nothing
   // contents: reads the data from the log from input_log.json
   // OUTPUT: returns a Inputlog object model from input_log.dart
-  Future<List> readLogData([String user = 'musicme']) async {
+  // // DEPRICATED:
+  /*Future<List> readLogData(User user) async {
+    print('he users email is ${user.email}');
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/inputLog/${user}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/inputLog/${user.email}.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -18,29 +21,35 @@ class InputLogProvider {
     print(res.body);
     var logList = jsonObject["inputs"];
     return (logList);
-  }
+  }*/
 
   //INPUT: text the user entered
   //CONTNENTS: updates the data to the input_log.json list
   // OUTPUTS: returns nothing.
-  updateLogData(String logInput, [var user = 'musicme']) async {
+  updateLogData(String logInput, User user) async {
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/inputLog/${user}.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/inputLog/${user.email}.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
-    print(res.body);
-    var jsonObject = JsonDecoder().convert(res.body);
-    // if there was null logged then make the list empty.
-    jsonObject['inputs'] ??= [];
-    if (!(jsonObject['inputs'].contains(logInput))) {
+    // we will get the string response null. 'null'
+    //
+    var jsonObject;
+    Map logMap = {"inputs": []};
+    if (res.body == 'null') {
+      // create new loglist with the first value
+      logMap["inputs"].add(logInput);
+      jsonObject = logMap;
+    } else {
+      // if it exists then decode it
+      jsonObject = JsonDecoder().convert(res.body);
+      jsonObject['inputs'] ??= [];
       jsonObject['inputs'].add(logInput);
       // writing the appended file.
-      var jsonString = JsonEncoder().convert(jsonObject);
-
-      res = await http.put(
-          'https://musicme-fd43b-default-rtdb.firebaseio.com/inputLog/${user}.json',
-          body: jsonString);
     }
+    var jsonString = JsonEncoder().convert(jsonObject);
+    res = await http.put(
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/inputLog/${user.email}.json',
+        body: jsonString);
   }
 }

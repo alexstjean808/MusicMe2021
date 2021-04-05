@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicme/features/music_app/core/methods/connect_to_spotify.dart';
+import 'package:musicme/features/music_app/data/data_provider/input_log_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/song_history_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/track_data_provider.dart';
@@ -26,7 +27,8 @@ class MusicMeHomePage extends StatelessWidget {
             TrackData(mood: 'joy', trackId: '7GhIk7Il098yCjg4BQjzvb'),
             TrackRepository(TrackDataProvider()),
             LikedSongsProvider(),
-            SongHistoryProvider()),
+            SongHistoryProvider(),
+            InputLogProvider()),
         child: Scaffold(
           drawer: LikedSongsSideMenu(),
           appBar: AppBar(

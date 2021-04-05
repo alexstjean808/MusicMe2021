@@ -105,16 +105,9 @@ class TrackDataProvider {
   }
 
 // this gets a track from the database!
-  Future<TrackData> getTrackFromSentence(String sentence, [User user]) async {
+  Future<TrackData> getTrackFromSentence(String sentence, User user) async {
     //makes default value musicme
     //makes default value musicme
-    User queryUser;
-    if (user == null) {
-      queryUser = User(
-          displayName: "Generic Name", email: "musicme@musicmetesting.com");
-    } else {
-      queryUser = user;
-    }
 
     // all possible moods
     var moods = ['joy', 'anger', 'sadness'];
@@ -134,7 +127,7 @@ class TrackDataProvider {
           _getRandomMood(); // if the mood doesnt exist then this function will return a random mood to work with.
     }
     // Reading the data from track_query_params
-    var trackQueryParams = await QueryParamsProvider().readParams(queryUser);
+    var trackQueryParams = await QueryParamsProvider().readParams(user);
     // now we will get all the ranges for whatever mood we got from IBM
     Ranges ranges = _selectParamRangeFromMood(trackQueryParams, mood);
 
@@ -260,15 +253,6 @@ class TrackDataProvider {
   }
 
   Future<TrackData> getTrackFromLastMood(User user) async {
-    //makes default value musicme
-    User queryUser;
-    if (user == null) {
-      queryUser = User(
-          displayName: "Generic Name", email: "musicme@musicmetesting.com");
-    } else {
-      queryUser = user;
-    }
-
     // this gets the mood from the IBM tone analyser
     var moodDataProvider = MoodDataProvider();
     // ibmData now has a mood string in it.
@@ -279,7 +263,7 @@ class TrackDataProvider {
     print(mood);
 
     // Reading the data from track_query_params
-    var trackQueryParams = await QueryParamsProvider().readParams(queryUser);
+    var trackQueryParams = await QueryParamsProvider().readParams(user);
     // now we will get all the ranges for whatever mood we got from IBM
     Ranges ranges = _selectParamRangeFromMood(trackQueryParams, mood);
 

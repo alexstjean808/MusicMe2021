@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
+import 'package:musicme/features/music_app/data/local_data/user_data.dart';
 
 void main() {
   test('Liked songs successfully deserialized into TrackData objects',
@@ -8,7 +9,8 @@ void main() {
     // ARRANGE
     var likedSongsProvider = LikedSongsProvider();
     // ACT
-    List<TrackData> songData = await likedSongsProvider.readLikedTracks();
+    List<TrackData> songData =
+        await likedSongsProvider.readLikedTracks(userGLOBAL);
     // ASSERT
     expect([songData[0].mood, songData[1].mood], ['fuckin', 'stoked']);
   });
@@ -21,9 +23,10 @@ void main() {
         trackId: "1psvnQxSDdIKTDM2Jm8QKt",
         mood: "still stoked");
     // ACT
-    await likedSongsProvider.addLikedSong(song, 'musicme');
+    await likedSongsProvider.addLikedSong(song, userGLOBAL);
 
-    List<TrackData> songData = await likedSongsProvider.readLikedTracks();
+    List<TrackData> songData =
+        await likedSongsProvider.readLikedTracks(userGLOBAL);
     // ASSERT
     expect(songData[songData.length - 1].trackId, '0hvxqftYCZT406ElE03giM');
   });
@@ -38,8 +41,9 @@ void main() {
         mood: "less stoked");
     // ACT
     //await likedSongsProvider.addLikedSong(song, 'musicme');
-    await likedSongsProvider.removeLikedSong(song, 'musicme');
-    List<TrackData> songData = await likedSongsProvider.readLikedTracks();
+    await likedSongsProvider.removeLikedSong(song, userGLOBAL);
+    List<TrackData> songData =
+        await likedSongsProvider.readLikedTracks(userGLOBAL);
     // ASSERT
     expect(songData[songData.length - 1].trackId, '1psvnQxSDdIKTDM2Jm8QKt');
   });

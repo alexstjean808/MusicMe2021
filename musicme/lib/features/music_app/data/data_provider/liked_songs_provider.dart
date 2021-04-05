@@ -14,21 +14,10 @@ class LikedSongsProvider {
   // OUTPUT: nothing
   // The liked Song should always already be in the list of songs but we should have a check to make sure it is there.
   // this function will most likely call on the readData function to see what is already there.
-  removeLikedSong(TrackData likedSong, [User user]) async {
-    String email;
-    var musicme;
-    //makes default value musicme
-    if (user == null) {
-      musicme = User(
-          email: "musicme@musicmetesting.com",
-          displayName: "Refactoring kinda sucks");
-      email = "musicme";
-    } else {
-      musicme = user;
-      email = user.email.substring(0, user.email.indexOf('@'));
-    }
+  removeLikedSong(TrackData likedSong, User user) async {
+    String email = user.email;
 
-    List<TrackData> likedTracksList = await readLikedTracks(musicme);
+    List<TrackData> likedTracksList = await readLikedTracks(user);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
     List<Map> likedMapList =
@@ -46,17 +35,9 @@ class LikedSongsProvider {
   // INPUT: nothing
   // CONTENT: take info from liked_songs.json
   // OUTPUT: A list of TrackData objects to display on the User interface
-  Future<List<TrackData>> readLikedTracks([User user]) async {
-    String email;
-    //makes default value musicme
-    if (user == null) {
-      email = "musicme";
-    } else {
-      email = user.email.substring(0, user.email.indexOf('@'));
-    }
-
+  Future<List<TrackData>> readLikedTracks(User user) async {
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/$email.json');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/likedTracks/${user.email}.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -76,20 +57,12 @@ class LikedSongsProvider {
 // CONTENT: Adds the songs to the List(or Touple) in the liked_songs.json
 // OUTPUT: nothing
 // this function will most likely call on the readData function to see what is already there.
-  addLikedSong(TrackData likedSong, [User user]) async {
-    String email;
-    var musicme;
+  addLikedSong(TrackData likedSong, User user) async {
+    String email = user.email;
+    print(email);
     //makes default value musicme
-    if (user == null) {
-      musicme = User(
-          email: "musicme@musicmetesting.com",
-          displayName: "Refactoring kinda sucks");
-      email = "musicme";
-    } else {
-      musicme = user;
-      email = user.email.substring(0, user.email.indexOf('@'));
-    }
-    List<TrackData> likedTracksList = await readLikedTracks(musicme);
+
+    List<TrackData> likedTracksList = await readLikedTracks(user);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
     List<Map> likedMapList =
