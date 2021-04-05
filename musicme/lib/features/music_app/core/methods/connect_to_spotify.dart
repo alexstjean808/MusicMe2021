@@ -7,7 +7,10 @@ Future<void> connectToSpotify() async {
   // for launching on the WEB use "https://erikdahl.ca/spotifycallback"
   try {
     var authenticationToken = await SpotifySdk.getAuthenticationToken(
-        clientId: "47a74f6401d343debec2c0f6634e0aeb", redirectUrl: redirectUrl);
+        clientId: "47a74f6401d343debec2c0f6634e0aeb",
+        redirectUrl: redirectUrl,
+        scope: 'user-read-email, '
+            'user-read-private, ');
     print(authenticationToken);
 
     await SpotifySdk.connectToSpotifyRemote(

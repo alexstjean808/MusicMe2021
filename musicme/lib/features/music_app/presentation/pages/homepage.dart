@@ -25,7 +25,8 @@ class MusicMeHomePage extends StatelessWidget {
         create: (context) => TrackBloc(
             TrackData(mood: 'joy', trackId: '7GhIk7Il098yCjg4BQjzvb'),
             TrackRepository(TrackDataProvider()),
-            LikedSongsProvider(), SongHistoryProvider()),
+            LikedSongsProvider(),
+            SongHistoryProvider()),
         child: Scaffold(
           drawer: LikedSongsSideMenu(),
           appBar: AppBar(
@@ -79,15 +80,15 @@ class MusicMeHomePage extends StatelessWidget {
           body: Stack(
             children: [
               BlocBuilder<TrackBloc, TrackData>(builder: (context, trackData) {
-                // print("Trying to change the bubble color");
-                // print(trackData.mood);
-                // if (trackData.mood == 'joy') {
-                //   return Bubbles(color: Colors.yellow);
-                // } else if (trackData.mood == 'sadness') {
-                //   return Bubbles(color: Colors.deepPurple);
-                // } else if (trackData.mood == 'anger') {
-                //   return Bubbles(color: Colors.red);
-                // } else {}
+                print("Trying to change the bubble color");
+                print(trackData.mood);
+                if (trackData.mood == 'joy') {
+                  return Bubbles(color: Colors.yellow);
+                } else if (trackData.mood == 'sadness') {
+                  return Bubbles(color: Colors.deepPurple);
+                } else if (trackData.mood == 'anger') {
+                  return Bubbles(color: Colors.red);
+                } else {}
                 return Bubbles(color: Colors.yellow);
               }),
               Column(
