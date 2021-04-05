@@ -112,7 +112,7 @@ class QueryParamsProvider {
     print(res.body);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
-    jsonObject['contries'] ??= [];
+    jsonObject['countries'] ??= [];
     if (jsonObject['countries'].contains(countryInput)) {
       jsonObject['countries'].remove(countryInput);
       // writing the appended file.
@@ -122,6 +122,37 @@ class QueryParamsProvider {
           'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$user.json',
           body: jsonString);
     }
+  }
+
+  initializeNewUser(String user) async {
+    var initialQueryMap = {
+      "track_mood_ranges": {
+        "anger_params": {
+          "acousticness": [0, 0.6],
+          "danceability": [0],
+          "energy": [0.6, 1],
+          "major": 1
+        },
+        "joy_params": {
+          "acousticness": [0],
+          "danceability": [0.5, 1],
+          "energy": [0.6, 1],
+          "major": 1
+        },
+        "sadness_params": {
+          "acousticness": [0],
+          "danceability": [0, 0.4],
+          "energy": [0, 0.6],
+          "major": 1
+        }
+      }
+    };
+
+    var jsonString = JsonEncoder().convert(initialQueryMap);
+
+    var res = await http.put(
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/$user.json',
+        body: jsonString);
   }
 
 /////////////////////////////////////////////////////////////////////TESTING COUNTRY

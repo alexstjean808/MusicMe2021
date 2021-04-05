@@ -134,6 +134,22 @@ void main() {
     // in this case [..., 'Pop']
     expect(output.countries, expected);
   });
+  test('Initializes new user query parameters', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    // reading the current file (this is dependedt on file reading working)
+    // this checks to see
+    await testQueryParam.initializeNewUser("pleasework");
+
+    // ACT
+    // adding Pop to the list
+
+    TrackQueryParams output = await testQueryParam.readParams("pleasework");
+    // ASSERT
+    // output should be first list read + string that was added
+    // in this case [..., 'Pop']
+    expect(output.trackMoodRanges.angerParams.acousticness, [0, 0.6]);
+  });
 
 //////////////////////////////////////////////////END TESTING COUNTRIES
 }
