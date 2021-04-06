@@ -1,6 +1,6 @@
 // this interacts with the input log and stores all the text entries
 // from the user.
-import 'dart:async';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:musicme/features/music_app/data/entities/user.dart';

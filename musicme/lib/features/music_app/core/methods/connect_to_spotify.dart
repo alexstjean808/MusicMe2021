@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:musicme/features/music_app/core/methods/get_user.dart';
 import 'package:musicme/features/music_app/data/entities/user.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
-import '../../data/local_data/auth_token.dart';
 
 Future<void> connectToSpotify() async {
   var redirectUrl =

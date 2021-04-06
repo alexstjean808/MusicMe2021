@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:musicme/features/music_app/core/methods/get_user.dart';
+import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
 import 'dart:convert';
-
+import '../../core/methods/dislike_update.dart';
 import 'package:musicme/features/music_app/data/entities/user.dart';
-import 'package:musicme/features/music_app/data/local_data/user_data.dart';
 
 // this is a class that will interact track_mood_ranges.json
 // It will contain methods that update the paramters based on some logic that needs to be determined
@@ -18,8 +17,51 @@ class QueryParamsProvider {
   // the code updates the track_mood_ranges.json file
   // OUTPUT: nothing
   // this function will most likely call on the readParamRanges() function to see what is already there.
-  updateParamRanges(String lastMood, User user) async {
-    //TODO impliment method!
+  Future<void> updateParamRanges(TrackData dislikedTrack, User user) async {
+    // get all the current data on the disliked track.
+    var params = {
+      'orderBy': '%22id%22',
+      'equalTo': '%22${dislikedTrack.trackId}%22',
+      'limitToFirst': '10',
+      'print': 'pretty',
+    };
+    var query = params.entries.map((p) => '${p.key}=${p.value}').join('&');
+    var res = await http.get(
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?$query');
+    if (res.statusCode != 200)
+      throw Exception('http.get error: statusCode= ${res.statusCode}');
+
+    // now we have a map with all the information on the song.
+    Map dislikedSongParams = JsonDecoder().convert(res.body);
+    var keys = dislikedSongParams.keys;
+
+    Map newParams = updateQueryRanges(
+        dislikedSongParams[keys.elementAt(0)]["energy"],
+        dislikedSongParams[keys.elementAt(0)]["danceability"],
+        dislikedSongParams[keys.elementAt(0)]["acousticness"],
+        dislikedTrack.mood,
+        user.email);
+
+    // now write map to server
+
+    res = await http.get(
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${user.email}.json');
+    if (res.statusCode != 200) {
+      throw Exception('http.get error: statusCode= ${res.statusCode}');
+    }
+    print("resbody before update: ${res.body}");
+    var jsonObject = JsonDecoder().convert(res.body);
+    // adding the genre to the existing list of genres in track_query_params.json
+    // it only adds the genre if it doesnt exist already in the array.
+    jsonObject['track_mood_ranges'] ??= [];
+
+    jsonObject['track_mood_ranges'] = newParams;
+    // writing the appended file.
+    var jsonString = JsonEncoder().convert(jsonObject);
+
+    res = await http.put(
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${user.email}.json',
+        body: jsonString);
   }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////USER GENRE

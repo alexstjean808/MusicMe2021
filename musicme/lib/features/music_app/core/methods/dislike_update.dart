@@ -1,37 +1,3 @@
-import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
-import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
-import 'package:spotify_sdk/models/track.dart';
-import 'dart:async';
-
-/*Future<Track> dislikeUpdate() async {
-  // To-do: fetch user song attributes from trackID here
-  // adam help lmao
-
-  var queryParamsProvider = QueryParamsProvider();
-  TrackQueryParams params = await queryParamsProvider.readParams();
-
-  num energyVal = 0.9;
-  num danceabilityVal =
-      0.3; //this is where we wanna get stuff from database/trackID
-  num acousticVal = 0.3;
-  String mood = trackId.mood;
-  String userID = "musicme";
-
-  bool dislike = true; //has a dislike event occured for given trackID?
-  //erik help lmao
-
-  //
-
-  var userMoodList = [];
-
-  if (dislike) {
-    userMoodList = updateQueryRanges(
-        energyVal, danceabilityVal, acousticVal, mood, userID);
-    print(userMoodList);
-  }
-  return trackDataProvider.toString();
-}*/
-
 /*
    * updates user query ranges for a given mood
    * <p>
@@ -47,9 +13,8 @@ import 'dart:async';
    * 
    * @return       list of [new_joyRanges,new_sadRanges,new_madRanges]
  */
-//TODO: change this userID to a User class and allow
 //sample curl request for "I'll never smile again": https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?orderBy=%22id%22&equalTo=%226q9IP7wbfpocUiOEGvQqCZ%22&limitToFirst=10&print=pretty
-List updateQueryRanges(num energyVal, num danceabilityVal, num acousticVal,
+Map updateQueryRanges(num energyVal, num danceabilityVal, num acousticVal,
     String mood, String userID) {
   //default values for querry ranges
   //To-do: these all should probably just be defined globally or from
@@ -125,9 +90,32 @@ List updateQueryRanges(num energyVal, num danceabilityVal, num acousticVal,
       }
       break;
   }
+  // ANGER list of [new_energyValMax,new_energyValMin,new_acousticValMax,new_acousticValMax,]
+  // JOY list of [new_energyValMax,new_energyValMin,new_danceabilityValMax,new_danceabilityValMax,]
+  // SAD list of [new_energyValMax,new_energyValMin,new_danceabilityValMax,new_danceabilityValMax,]
+  //
+  Map newParams = {
+    "anger_params": {
+      "acousticness": [angerList[2], angerList[3]],
+      "danceability": [0],
+      "energy": [angerList[0], angerList[1]],
+      "major": 1
+    },
+    "joy_params": {
+      "acousticness": [0],
+      "danceability": [joyList[2], joyList[3]],
+      "energy": [joyList[0], joyList[1]],
+      "major": 1
+    },
+    "sadness_params": {
+      "acousticness": [0],
+      "danceability": [sadList[2], sadList[3]],
+      "energy": [sadList[0], sadList[1]],
+      "major": 1
+    }
+  };
 
-  // here we would want to write params to the server using a map.
-  return [joyList, sadList, angerList];
+  return newParams;
 }
 
 //////////////////////////////////////////////

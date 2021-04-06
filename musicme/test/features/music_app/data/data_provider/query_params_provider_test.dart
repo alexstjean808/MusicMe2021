@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicme/features/music_app/core/methods/get_user.dart';
 import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
+import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/entities/track_query_params.dart';
 import 'package:musicme/features/music_app/data/entities/user.dart';
 import 'package:musicme/features/music_app/data/local_data/user_data.dart';
@@ -145,6 +146,26 @@ void main() {
     // reading the current file (this is dependedt on file reading working)
     // this checks to see
     await initializeNewUser(testUser);
+
+    // ACT
+    // adding Pop to the list
+
+    TrackQueryParams output = await testQueryParam.readParams(testUser);
+    // ASSERT
+    // output should be first list read + string that was added
+    // in this case [..., 'Pop']
+    expect(output.trackMoodRanges.angerParams.acousticness, [0, 0.6]);
+  });
+  test('Testing updateParamRanges', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    var testUser = User(email: "musicme", displayName: "MyDisplayName");
+    TrackData dislikedTrack = TrackData(
+        mood: "sadness", trackId: "6q9IP7wbfpocUiOEGvQqCZ", name: "It's fine");
+
+    // reading the current file (this is dependedt on file reading working)
+    // this checks to see
+    await testQueryParam.updateParamRanges(dislikedTrack, testUser);
 
     // ACT
     // adding Pop to the list

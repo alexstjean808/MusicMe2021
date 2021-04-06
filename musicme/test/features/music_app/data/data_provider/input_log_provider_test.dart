@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicme/features/music_app/data/data_provider/input_log_provider.dart';
 import 'package:musicme/features/music_app/data/entities/user.dart';
-import 'package:musicme/features/music_app/data/local_data/user_data.dart';
 
 void main() {
   // // Tests the readLogData() method of InputLogProvider class to read inputs from database
