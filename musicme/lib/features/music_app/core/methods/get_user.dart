@@ -35,8 +35,9 @@ Future<User> userValidation(User user) async {
 
   if (res.body == 'null') {
     await initializeNewUser(user);
+    print("No user. Creating user: ${user.email}");
   } else {
-    print("User exists.");
+    print("User exists. Username: ${user.email}");
   }
 
   userGLOBAL = user;
