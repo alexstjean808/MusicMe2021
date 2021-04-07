@@ -179,7 +179,6 @@ class TrackDataProvider {
       }
       var queryUrl =
           'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?$query';
-      print(queryUrl);
 
       var response = await http.get(queryUrl);
       if (response.statusCode != 200) {
@@ -315,7 +314,6 @@ class TrackDataProvider {
       }
       var queryUrl =
           'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?$query';
-      print(queryUrl);
 
       var response = await http.get(queryUrl);
       if (response.statusCode != 200) {
