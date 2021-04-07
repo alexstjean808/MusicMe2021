@@ -177,5 +177,77 @@ void main() {
     expect(output.trackMoodRanges.angerParams.acousticness, [0, 0.6]);
   });
 
+  test('Correctly updates query params for joy, energy', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    var testUser = User(email: "musicme", displayName: "MyDisplayName");
+    TrackData dislikedTrack = TrackData(
+        mood: "joy", trackId: "1igtKwX3EHjN95HanbkHNg", name: "Take Care");
+
+    // reading the current file (this is dependant on file reading working)
+    // this checks to see
+    await testQueryParam.updateParamRanges(dislikedTrack, testUser);
+
+    // ACT
+
+    TrackQueryParams output = await testQueryParam.readParams(testUser);
+    // ASSERT
+    expect(output.trackMoodRanges.joyParams.energy, [0.5, 1]);
+  });
+
+  test('Correctly updates query params for joy, danceability', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    var testUser = User(email: "musicme", displayName: "MyDisplayName");
+    TrackData dislikedTrack = TrackData(
+        mood: "joy", trackId: "1igtKwX3EHjN95HanbkHNg", name: "Take Care");
+
+    // reading the current file (this is dependant on file reading working)
+    // this checks to see
+    await testQueryParam.updateParamRanges(dislikedTrack, testUser);
+
+    // ACT
+
+    TrackQueryParams output = await testQueryParam.readParams(testUser);
+    // ASSERT
+    expect(output.trackMoodRanges.joyParams.danceability, [0.6, 1]);
+  });
+
+  test('Correctly updates query params for anger, energy', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    var testUser = User(email: "musicme", displayName: "MyDisplayName");
+    TrackData dislikedTrack = TrackData(
+        mood: "anger", trackId: "1igtKwX3EHjN95HanbkHNg", name: "Take Care");
+
+    // reading the current file (this is dependent on file reading working)
+    // this checks to see
+    await testQueryParam.updateParamRanges(dislikedTrack, testUser);
+
+    // ACT
+
+    TrackQueryParams output = await testQueryParam.readParams(testUser);
+    // ASSERT
+    expect(output.trackMoodRanges.angerParams.energy, [0.5, 1]);
+  });
+
+  test('Correctly updates query params for anger, acousticness', () async {
+    // ARRANGE
+    var testQueryParam = QueryParamsProvider();
+    var testUser = User(email: "musicme", displayName: "MyDisplayName");
+    TrackData dislikedTrack = TrackData(
+        mood: "anger", trackId: "1igtKwX3EHjN95HanbkHNg", name: "Take Care");
+
+    // reading the current file (this is dependent on file reading working)
+    // this checks to see
+    await testQueryParam.updateParamRanges(dislikedTrack, testUser);
+
+    // ACT
+
+    TrackQueryParams output = await testQueryParam.readParams(testUser);
+    // ASSERT
+    expect(output.trackMoodRanges.angerParams.acousticness, [0, 0.5]);
+  });
+
 //////////////////////////////////////////////////END TESTING COUNTRIES
 }
