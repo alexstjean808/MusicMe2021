@@ -24,7 +24,8 @@ Future<User> getUserData(String authToken) async {
 }
 
 //  checks to see if a new user exists already
-Future userValidation(User user) async {
+//  and returns the user object, and sets the global variable.
+Future<User> userValidation(User user) async {
   // tests to see if data already exists for the user.
   var res = await http.get(
       'https://musicme-fd43b-default-rtdb.firebaseio.com/queryParams/${user.email}.json');
@@ -39,6 +40,7 @@ Future userValidation(User user) async {
   }
 
   userGLOBAL = user;
+  return user;
 }
 
 initializeNewUser(User user) async {
