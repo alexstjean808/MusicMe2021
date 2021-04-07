@@ -17,4 +17,16 @@ void main() {
     //ASSERT
     expect(trackId.runtimeType, TrackData);
   });
+
+  test('Get random track', () async {
+    var trackDataProvider = TrackDataProvider();
+
+    // ARRANGE
+    TrackData trackId = await trackDataProvider.getFeelingLuckyTrack();
+    // ACT
+    print(trackId.trackId);
+
+    //ASSERT
+    expect(trackId.runtimeType, TrackData);
+  });
 }

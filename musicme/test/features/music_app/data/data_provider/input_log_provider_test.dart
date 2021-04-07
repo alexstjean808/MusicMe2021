@@ -21,6 +21,6 @@ void main() {
     var inputLogProvider = InputLogProvider();
     //ACT
     await inputLogProvider.updateLogData(
-        "I added this", User(displayName: 'ERik', email: "erikd234"));
+        "does this double", User(displayName: 'ERik', email: "erikd234"));
   });
 }

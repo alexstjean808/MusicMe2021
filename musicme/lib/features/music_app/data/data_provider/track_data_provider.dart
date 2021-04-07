@@ -82,14 +82,12 @@ class TrackDataProvider {
 
     //parameters are key for the firebase and a random number between 0 and the length of the database that we hardcoded
     //code taken mostly from https://curl.trillworks.com/#dart
-    var params = {
-      'orderBy': r'%22$key%22',
-      'equalTo': '%22' + randomNumber.toString() + '%22',
-    };
-    var query = params.entries.map((p) => '${p.key}=${p.value}').join('&');
+    var query = randomNumber.toString();
+//https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks/100000.json
+//https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks/100000/id.json
 
     var res = await http.get(
-        'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks.json?$query');
+        'https://musicme-fd43b-default-rtdb.firebaseio.com/finalTracks/$query.json');
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
@@ -97,9 +95,8 @@ class TrackDataProvider {
 
     var returnJSON =
         convert.jsonDecode(res.body); //convert http response to JSON
-    var trueSongNumber = returnJSON.keys.toList()[0];
 
-    var randomSongId = returnJSON[trueSongNumber]['id'];
+    var randomSongId = returnJSON['id'];
     var trackData = TrackData(mood: _getRandomMood(), trackId: randomSongId);
     return trackData;
   }
