@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:musicme/features/music_app/core/methods/connect_to_spotify.dart';
 import 'package:musicme/features/music_app/data/data_provider/input_log_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
@@ -92,15 +91,6 @@ class MusicMeHomePage extends StatelessWidget {
           body: Stack(
             children: [
               BlocBuilder<TrackBloc, TrackData>(builder: (context, trackData) {
-                print("Trying to change the bubble color");
-                print(trackData.mood);
-                if (trackData.mood == 'joy') {
-                  return Bubbles(color: Colors.yellow);
-                } else if (trackData.mood == 'sadness') {
-                  return Bubbles(color: Colors.deepPurple);
-                } else if (trackData.mood == 'anger') {
-                  return Bubbles(color: Colors.red);
-                } else {}
                 return Bubbles(color: Colors.yellow);
               }),
               Column(

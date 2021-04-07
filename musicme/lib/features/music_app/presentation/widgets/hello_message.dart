@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:musicme/features/music_app/data/entities/user.dart';
 import 'package:musicme/features/music_app/presentation/bloc/display_name_block.dart';
-import '../../data/local_data/user_data.dart';
 
 class HelloMessage extends StatefulWidget {
   @override
