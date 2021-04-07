@@ -27,6 +27,6 @@ Future<User> connectToSpotify() async {
     print("not implemented");
   }
   User user = await getUserData(authenticationToken);
-
-  return await userValidation(user);
+  User userOut = await userValidation(user);
+  return userOut;
 }
