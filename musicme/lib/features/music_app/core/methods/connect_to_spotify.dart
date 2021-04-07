@@ -3,7 +3,7 @@ import 'package:musicme/features/music_app/core/methods/get_user.dart';
 import 'package:musicme/features/music_app/data/entities/user.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
-Future<void> connectToSpotify() async {
+Future<User> connectToSpotify() async {
   var redirectUrl =
       "https://erikdahl.ca/spotifycallback"; // for launcing on mobile use "spotify-ios-quick-start://spotify-login-callback"
   // for launching on the WEB use "https://erikdahl.ca/spotifycallback"
@@ -27,5 +27,6 @@ Future<void> connectToSpotify() async {
     print("not implemented");
   }
   User user = await getUserData(authenticationToken);
-  await userValidation(user);
+
+  return await userValidation(user);
 }

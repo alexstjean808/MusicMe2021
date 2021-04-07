@@ -79,7 +79,21 @@ class LikeDislikeButtons extends StatelessWidget {
               padding: const EdgeInsets.all(11.0),
               child: Icon(Icons.thumb_down, color: Colors.white),
             ),
-            onPressed: () {}, // dislike button
+            onPressed: () {
+              final snackBar = SnackBar(
+                content: Text('Song disliked... Updating recommendations.'),
+                action: SnackBarAction(
+                  label: 'Close',
+                  onPressed: () {
+                    // Some code to undo the change.
+                  },
+                ),
+              );
+
+              BlocProvider.of<TrackBloc>(context)
+                  .add(DislikeEvent()); // changing the paramters
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }, // dislike button
           ),
           SizedBox(
             width: 60,
@@ -94,7 +108,17 @@ class LikeDislikeButtons extends StatelessWidget {
               child: Icon(Icons.thumb_up, color: Colors.white),
             ),
             onPressed: () {
+              final snackBar = SnackBar(
+                content: Text('Song liked... Adding to liked songs list.'),
+                action: SnackBarAction(
+                  label: 'Close',
+                  onPressed: () {
+                    // Some code to undo the change.
+                  },
+                ),
+              );
               BlocProvider.of<TrackBloc>(context).add(LikeEvent());
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }, // Like buttons
           ),
         ],

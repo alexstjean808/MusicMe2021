@@ -49,7 +49,9 @@ class QueryParamsProvider {
     if (res.statusCode != 200) {
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     }
-    print("resbody before update: ${res.body}");
+    print("res body before update: ${res.body}");
+    print("--------------");
+    print("after update: $newParams");
     var jsonObject = JsonDecoder().convert(res.body);
     // adding the genre to the existing list of genres in track_query_params.json
     // it only adds the genre if it doesnt exist already in the array.
