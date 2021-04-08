@@ -9,13 +9,15 @@ class MusicPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(.7),
+      ),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.30,
+        height: MediaQuery.of(context).size.height * 0.37,
         width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               children: [
@@ -51,6 +53,9 @@ class MusicPlayer extends StatelessWidget {
               height: 10,
             ),
             ControlButtons(),
+            SizedBox(
+              height: 30,
+            ),
           ],
         ),
       ),
@@ -96,7 +101,24 @@ class LikeDislikeButtons extends StatelessWidget {
             }, // dislike button
           ),
           SizedBox(
-            width: 60,
+            width: 30,
+          ),
+          BlocBuilder<TrackBloc, TrackData>(
+            builder: (context, track) {
+              if (track.image.url == 'initial') {
+                return Image.asset(
+                  'assets/images/man_with_beard.jpg',
+                  height: 150,
+                );
+              }
+              return Image.network(
+                track.image.url,
+                height: 150,
+              );
+            },
+          ),
+          SizedBox(
+            width: 30,
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(

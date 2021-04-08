@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:musicme/features/music_app/core/methods/connect_to_spotify.dart';
 import 'package:musicme/features/music_app/core/methods/get_player_state.dart';
 import 'package:musicme/features/music_app/data/data_provider/input_log_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/query_params_provider.dart';
 import 'package:musicme/features/music_app/data/data_provider/song_history_provider.dart';
+import 'package:musicme/features/music_app/data/entities/spotify_image.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
 import 'package:musicme/features/music_app/data/local_data/user_data.dart';
 import 'package:musicme/features/music_app/data/repository/track_repository.dart';
@@ -41,6 +43,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
   Future<TrackData> _updateTrackData(TrackData trackData) async {
     // gets the current player state and updates track Data with the artist name and the song name
     // returns the TrackData updated with artist name and songs name
+    trackData.image = await getSongImageUrl(trackData.trackId);
     trackData =
         await Future.delayed(const Duration(milliseconds: 100), () async {
       Track newTrackData =
@@ -56,6 +59,7 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
   Future<TrackData> _getCurrentTrack() async {
     Track newTrackData = await getPlayerState();
     String trackId = newTrackData.uri;
+    SongImage songImage = await getSongImageUrl(trackId);
     print("Before split $trackId");
     // splitting uri so we can extract the song id
     var array = trackId.split(':');
@@ -66,7 +70,8 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
         mood: moodHistory.last,
         trackId: trackId,
         artist: newTrackData.artist.name,
-        name: newTrackData.name);
+        name: newTrackData.name,
+        image: songImage.url);
     return currentTrack;
   }
 
@@ -117,7 +122,11 @@ class TrackBloc extends Bloc<TrackEvent, TrackData> {
       await queryParamsProvider.updateParamRanges(currentSong, userGLOBAL);
     } else if (event is PlayLikedSongEvent) {
       TrackData likedSong = event.song;
-      await _playSpotifyTrack(likedSong);
+      try {
+        await _playSpotifyTrack(likedSong);
+      } catch (e) {}
+      ;
+      likedSong = await _updateTrackData(likedSong);
       yield likedSong;
     }
   }

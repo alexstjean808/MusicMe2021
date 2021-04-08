@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicme/features/music_app/data/data_provider/liked_songs_provider.dart';
 import 'package:musicme/features/music_app/data/entities/track_data.dart';
+import 'package:musicme/features/music_app/data/entities/user.dart';
 import 'package:musicme/features/music_app/data/local_data/user_data.dart';
 
 void main() {
@@ -18,17 +19,17 @@ void main() {
     // ARRANGE
     var likedSongsProvider = LikedSongsProvider();
     TrackData song = TrackData(
-        name: "billy",
+        name: "Compensating",
         artist: "tom",
-        trackId: "1psvnQxSDdIKTDM2Jm8QKt",
+        trackId: "61KoN6PlBhQD7sivCcf0hA",
         mood: "still stoked");
     // ACT
-    await likedSongsProvider.addLikedSong(song, userGLOBAL);
+    await likedSongsProvider.addLikedSong(song, User(email: 'erikd234'));
 
     List<TrackData> songData =
-        await likedSongsProvider.readLikedTracks(userGLOBAL);
+        await likedSongsProvider.readLikedTracks(User(email: 'erikd234'));
     // ASSERT
-    expect(songData[songData.length - 1].trackId, '0hvxqftYCZT406ElE03giM');
+    expect(songData[songData.length - 1].trackId, '61KoN6PlBhQD7sivCcf0hA');
   });
 
   test('Liked song successfully removed from database', () async {

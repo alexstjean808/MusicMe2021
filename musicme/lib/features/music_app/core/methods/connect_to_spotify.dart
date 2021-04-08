@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:musicme/features/music_app/core/methods/get_user.dart';
+import 'package:musicme/features/music_app/data/entities/spotify_image.dart';
 import 'package:musicme/features/music_app/data/entities/user.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
+import 'package:http/http.dart' as http;
+// CARE GLOBAL VARIABLE STORED AUTH TOKEN
+import '../../data/local_data/auth_token.dart';
 
 Future<User> connectToSpotify() async {
   var redirectUrl =
@@ -26,7 +32,35 @@ Future<User> connectToSpotify() async {
   } on MissingPluginException {
     print("not implemented");
   }
+  authTokenGLOBAL = authenticationToken; // storing global variable for use
   User user = await getUserData(authenticationToken);
   User userOut = await userValidation(user);
   return userOut;
+}
+
+// function that returns an image url for a song the authentication token must be activated before this function will work.
+// All liked songs should have a image already.
+Future<SongImage> getSongImageUrl(String trackId) async {
+  try {
+    var headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $authTokenGLOBAL',
+    };
+
+    var res = await http.get('https://api.spotify.com/v1/tracks/${trackId}',
+        headers: headers);
+    if (res.statusCode != 200)
+      throw Exception('http.get error: statusCode= ${res.statusCode}');
+
+    var jsonMap = JsonDecoder().convert(res.body);
+
+    SongImages songImages = SongImages.fromJson(jsonMap['album']);
+
+    return songImages.images[0]; // return the first image.
+  } catch (e) {
+    // if theres an error then print the error and display the bearded man image.
+    print('Failed to get the song image: $e');
+    return SongImage('initial');
+  }
 }

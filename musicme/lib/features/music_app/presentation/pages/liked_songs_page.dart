@@ -7,6 +7,7 @@ import 'package:musicme/features/music_app/presentation/bloc/liked_songs_event.d
 import 'package:musicme/features/music_app/presentation/bloc/liked_songs_state.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_block.dart';
 import 'package:musicme/features/music_app/presentation/bloc/track_event.dart';
+import 'package:musicme/features/music_app/presentation/widgets/music_player.dart';
 
 class LikedSongsSideMenu extends StatelessWidget {
   @override
@@ -163,6 +164,8 @@ class LikeSongTile extends StatelessWidget {
             padding: EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
+                Scaffold.of(context)
+                    .showBottomSheet((context) => MusicPlayer());
                 BlocProvider.of<TrackBloc>(context).add(PlayLikedSongEvent(
                     TrackData(
                         name: name,

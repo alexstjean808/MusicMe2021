@@ -1,6 +1,7 @@
 // this may become obsolete if the track_mood_ranges will do the same thing
 
 import 'package:flutter/cupertino.dart';
+import 'package:musicme/features/music_app/data/entities/spotify_image.dart';
 
 class LikedSongList {
   final List<TrackData> songs;
@@ -20,10 +21,12 @@ class TrackData {
   final String trackId;
   String name;
   String artist;
+  SongImage image;
   final String mood;
   // not final because this is initialized later when player is active and changes
 
-  TrackData({@required this.mood, this.trackId, this.name, this.artist});
+  TrackData(
+      {@required this.mood, this.trackId, this.name, this.artist, this.image});
   TrackData.fromJson(Map<String, dynamic> json)
       : trackId = json["id"] ??= [],
         mood = json["mood"] ??= [],
