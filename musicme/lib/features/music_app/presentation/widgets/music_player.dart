@@ -13,7 +13,7 @@ class MusicPlayer extends StatelessWidget {
         color: Colors.blue.withOpacity(.7),
       ),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.37,
+        height: 350,
         width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisSize: MainAxisSize.max,
